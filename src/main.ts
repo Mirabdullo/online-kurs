@@ -16,7 +16,7 @@ async function start() {
 
   console.log(config.get('POSTGRES_PASSWORD'));
 
-  app.useGlobalPipes(new ValidationPipe())
+  app.useGlobalPipes(new ValidationPipe({whitelist: true}))
   app.use(cookieParser())
 
   const swagger = new DocumentBuilder()

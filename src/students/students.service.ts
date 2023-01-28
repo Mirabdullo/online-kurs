@@ -28,7 +28,6 @@ export class StudentsService {
       if (student) {
         throw new BadRequestException('Bunday foydalanuvchi mavjud');
       }
-
       const hashedPassword = await bcrypt.hash(createStudentDto.password, 7);
 
       const newStudent = await this.studentRepository.create({
@@ -49,7 +48,6 @@ export class StudentsService {
       );
 
       await this.tokenService.writeCookie(tokens.refresh_token, res);
-
       return {
         access_token: tokens.access_token,
         refresh_token: tokens.refresh_token,

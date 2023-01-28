@@ -5,13 +5,13 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { resolve } from 'path';
 import { AdminsModule } from './admins/admins.module';
 import { StudentsModule } from './students/students.module';
-import { TeachersModule } from './teachers/teachers.module';
+import { ModuleTestModule } from './module_test/module_test.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: './.env',
+      envFilePath: `.${process.env.NODE_ENV}.env`,
     }),
     ServeStaticModule.forRoot({
       rootPath: resolve(__dirname, 'static'),
@@ -34,7 +34,7 @@ import { TeachersModule } from './teachers/teachers.module';
 
     AdminsModule,
     StudentsModule,
-    TeachersModule,
+    ModuleTestModule,
   ],
   controllers: [],
   providers: [],

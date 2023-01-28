@@ -25,17 +25,6 @@ export class CreateStudentDto {
     password: string
 
 
-    @ApiProperty({example: '1', description: 'Studentning olgan kurslar royxati idsi'})
-    @IsOptional()
-    @IsNumber({},{message: "id must be number"})
-    enrolled_course_id: number
-
-
-    @ApiProperty({example: '1', description: 'Studentning yoqtirgan kurslarining idsi'})
-    @IsOptional()
-    @IsNumber({},{message: "id must be a number"})
-    liked_course_id: number
-
 
 
 }

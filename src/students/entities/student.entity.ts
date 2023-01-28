@@ -44,25 +44,6 @@ export class Student extends Model<Student> {
   })
   password: string;
 
-  @ApiProperty({
-    example: '1',
-    description: 'Studentning olgan kurslar royxati idsi',
-  })
-  @Column({
-    type: DataType.INTEGER,
-    allowNull: true,
-  })
-  enrolled_course_id: number;
-
-  @ApiProperty({
-    example: '1',
-    description: 'Studentning yoqtirgan kurslarining idsi',
-  })
-  @Column({
-    type: DataType.INTEGER,
-    allowNull: true,
-  })
-  liked_course_id: number;
 
   @ApiProperty({
     example: '039q4uriojf03fh03-rih4qefjq9rf-3pojedfq-weod-p3rj',
@@ -79,7 +60,7 @@ export class Student extends Model<Student> {
   })
   @Column({
     type: DataType.BOOLEAN,
-    defaultValue: false,
+    defaultValue: true,
   })
   is_active: boolean;
 }
