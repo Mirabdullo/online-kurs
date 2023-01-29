@@ -14,6 +14,7 @@ export class ModuleTestService {
       const test = await this.testRepository.create(createModuleTestDto)
       return test
     } catch (error) {
+      console.log(error);
       throw new InternalServerErrorException(error.message)
     }
   }

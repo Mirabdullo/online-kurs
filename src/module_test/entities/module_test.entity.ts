@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, DataType, Model, Table } from 'sequelize-typescript';
 
-@Table({ tableName: 'admin', timestamps: true, paranoid: true })
+@Table({ tableName: 'module-test', timestamps: true, paranoid: true })
 export class ModuleTests extends Model<ModuleTests> {
   @ApiProperty({ example: '1', description: 'Unikal id' })
   @Column({
