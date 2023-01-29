@@ -6,6 +6,8 @@ import { resolve } from 'path';
 import { AdminsModule } from './admins/admins.module';
 import { StudentsModule } from './students/students.module';
 import { ModuleTestModule } from './module_test/module_test.module';
+import { CategoryModule } from './category/category.module';
+import { CourseModule } from './course/course.module';
 
 @Module({
   imports: [
@@ -35,6 +37,8 @@ import { ModuleTestModule } from './module_test/module_test.module';
     AdminsModule,
     StudentsModule,
     ModuleTestModule,
+    CategoryModule,
+    CourseModule,
   ],
   controllers: [],
   providers: [],
