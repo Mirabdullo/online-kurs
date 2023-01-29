@@ -8,12 +8,12 @@ import { Course } from './entities/course.entity';
 @ApiTags('Course')
 @Controller('course')
 export class CourseController {
-  constructor(private readonly courseService: CourseService) {}
+  constructor(private readonly courseService: CourseService) { }
 
   @ApiOperation({ summary: 'Course qoshish' })
   @ApiResponse({ status: 201, type: Course })
   @Post()
-  create(@Body() createCourseDto: CreateCourseDto, @UploadedFile() img) {
+  create(@Body() createCourseDto: CreateCourseDto, @UploadedFile() img: any) {
     return this.courseService.create(createCourseDto, img);
   }
 

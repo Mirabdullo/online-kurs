@@ -8,6 +8,7 @@ import { StudentsModule } from './students/students.module';
 import { ModuleTestModule } from './module_test/module_test.module';
 import { CategoryModule } from './category/category.module';
 import { CourseModule } from './course/course.module';
+import { LessonModule } from './lesson/lesson.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { CourseModule } from './course/course.module';
     ModuleTestModule,
     CategoryModule,
     CourseModule,
+    LessonModule,
   ],
   controllers: [],
   providers: [],
