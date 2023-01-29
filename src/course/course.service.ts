@@ -49,6 +49,14 @@ export class CourseService {
       if(!img){
         await this.fileService.removeFile(course.image)
         const fileName = await this.fileService.createFile(img)
+
+        return await this.courseRepository.update({
+          ...updateCourseDto,
+          image: fileName
+        },{
+          where: {id: id},
+          returning: true
+        })        
       }
       return await this.courseRepository.update(updateCourseDto,{where: {id: id}, returning: true})
     } catch (error) {
