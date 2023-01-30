@@ -1,5 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateCourseDto {
   @ApiProperty({ example: '1', description: 'Qaysi categoriyaga tegishliligi' })
@@ -8,7 +13,7 @@ export class CreateCourseDto {
 
   @ApiProperty({ example: 'AAT buhgalteriya', description: 'Course nomi' })
   @IsNotEmpty()
-  @IsString()
+  @IsString({message: "title satr bolishi kerak"})
   title: string;
 
   @ApiProperty({
@@ -23,7 +28,7 @@ export class CreateCourseDto {
   @IsString()
   image: string;
 
-  @ApiProperty({ example: '', description: 'Course narxi' })
+  @ApiProperty({ example: '500000', description: 'Course narxi' })
   @IsOptional()
   @IsNumber()
   price: number;

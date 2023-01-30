@@ -8,7 +8,10 @@ import { StudentsModule } from './students/students.module';
 import { ModuleTestModule } from './module_test/module_test.module';
 import { CategoryModule } from './category/category.module';
 import { CourseModule } from './course/course.module';
+
 import { LessonModule } from './lesson/lesson.module';
+
+import { RateModule } from './rate/rate.module';
 
 @Module({
   imports: [
@@ -40,7 +43,10 @@ import { LessonModule } from './lesson/lesson.module';
     ModuleTestModule,
     CategoryModule,
     CourseModule,
+
     LessonModule,
+
+    RateModule,
   ],
   controllers: [],
   providers: [],

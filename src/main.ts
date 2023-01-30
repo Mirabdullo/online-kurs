@@ -10,13 +10,12 @@ async function start() {
   
   const app = await NestFactory.create(AppModule);
   const config = app.get(ConfigService)
-  console.log(config);
 
   const PORT = config.get<number>('PORT')
 
   console.log(config.get('POSTGRES_PASSWORD'));
 
-  app.useGlobalPipes(new ValidationPipe({whitelist: true}))
+  // app.useGlobalPipes(new ValidationPipe())
   app.use(cookieParser())
 
   const swagger = new DocumentBuilder()

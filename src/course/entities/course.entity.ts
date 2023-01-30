@@ -10,7 +10,7 @@ export class Course extends Model<Course> {
     autoIncrement: true,
     primaryKey: true,
   })
-  id: number;
+  id: string;
   
   @ApiProperty({ example: '1', description: 'Qaysi categoriyaga tegishliligi' })
   @Column({
