@@ -12,6 +12,8 @@ import { CourseModule } from './course/course.module';
 import { LessonModule } from './lesson/lesson.module';
 
 import { RateModule } from './rate/rate.module';
+import { EnrolledCourseModule } from './enrolled_course/enrolled_course.module';
+import { LikedCourseModule } from './liked_course/liked_course.module';
 
 @Module({
   imports: [
@@ -34,6 +36,7 @@ import { RateModule } from './rate/rate.module';
         database: config.get<string>('POSTGRES_DB'),
         models: [__dirname + 'dist/**/*.entity{.ts,.js}'],
         autoLoadModels: true,
+        synchronize: true,
         logging: false,
       }),
     }),
@@ -47,6 +50,10 @@ import { RateModule } from './rate/rate.module';
     LessonModule,
 
     RateModule,
+
+    EnrolledCourseModule,
+
+    LikedCourseModule,
   ],
   controllers: [],
   providers: [],

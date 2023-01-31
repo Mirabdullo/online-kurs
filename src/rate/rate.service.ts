@@ -1,26 +1,63 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
+import sequelize from 'sequelize';
 import { CreateRateDto } from './dto/create-rate.dto';
 import { UpdateRateDto } from './dto/update-rate.dto';
+import { Rate } from './entities/rate.entity';
 
 @Injectable()
 export class RateService {
-  create(createRateDto: CreateRateDto) {
-    return 'This action adds a new rate';
+  constructor(@InjectModel(Rate) private rateRepository: typeof Rate) { }
+  async create(createRateDto: CreateRateDto) {
+    try {
+      return await this.rateRepository.create(createRateDto)
+    } catch (error) {
+      throw new InternalServerErrorException(error.message)
+    }
   }
 
-  findAll() {
-    return `This action returns all rate`;
+
+
+  async findAll() {
+    try {
+      return await this.rateRepository.findAll({ include: { all: true } })
+    } catch (error) {
+      throw new InternalServerErrorException(error.message)
+
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} rate`;
+  async findOne(id: number) {
+    try {
+      const data = await this.rateRepository.findByPk(id)
+      if (!data) {
+        throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
+      }
+      return data
+    } catch (error) {
+      throw new InternalServerErrorException(error.message)
+
+    }
   }
 
-  update(id: number, updateRateDto: UpdateRateDto) {
-    return `This action updates a #${id} rate`;
+  async update(id: number, updateRateDto: UpdateRateDto) {
+    try {
+      const rate = await this.rateRepository.findByPk(id)
+      if (!rate) throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND)
+
+      return await this.rateRepository.update(updateRateDto, { where: { id: id }, returning: true })
+    } catch (error) {
+      throw new InternalServerErrorException(error.message)
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} rate`;
+  async remove(id: number) {
+    try {
+      const rate = await this.rateRepository.findByPk(id)
+      if (!rate) throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND)
+      return await this.rateRepository.destroy({ where: { id: id } })
+    } catch (error) {
+      throw new InternalServerErrorException(error.message)
+    }
   }
 }

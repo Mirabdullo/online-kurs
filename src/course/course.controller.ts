@@ -34,7 +34,7 @@ export class CourseController {
     return this.courseService.findOne(+id);
   }
 
-  @ApiOperation({ summary: 'Id orqali bitta kourse malumotlarini ozgartirish' })
+  @ApiOperation({ summary: 'Id orqali bitta course malumotlarini ozgartirish' })
   @ApiResponse({ status: 200, type: Course })
   @Patch(':id')
   @UseInterceptors(FileInterceptor('image'))
