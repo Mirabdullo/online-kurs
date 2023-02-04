@@ -11,9 +11,9 @@ export class CourseService {
     @InjectModel(Course) private courseRepository: typeof Course,
     private readonly fileService: FilesService
   ){}
-  async create(createCourseDto: CreateCourseDto, image: any) {
+  async create(createCourseDto: CreateCourseDto, file: any) {
     try {
-      const fileName = await this.fileService.createFile(image)
+      const fileName = await this.fileService.createFile(file)
       const course = await this.courseRepository.create({
         ...createCourseDto,
         image: fileName
@@ -41,14 +41,14 @@ export class CourseService {
     }
   }
 
-  async update(id: number, updateCourseDto: UpdateCourseDto, image: any) {
+  async update(id: number, updateCourseDto: UpdateCourseDto, file: any) {
     try {
       const course = await this.courseRepository.findByPk(id)
       if(!course) throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND)
       
-      if(!image){
+      if(!file){
         await this.fileService.removeFile(course.image)
-        const fileName = await this.fileService.createFile(image)
+        const fileName = await this.fileService.createFile(file)
 
         return await this.courseRepository.update({
           ...updateCourseDto,

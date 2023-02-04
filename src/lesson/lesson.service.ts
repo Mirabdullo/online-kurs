@@ -1,20 +1,21 @@
 import { HttpException, HttpStatus, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { FilesService } from '../uploads/files.service';
 import { CreateLessonDto } from './dto/create-lesson.dto';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
 import { Lesson } from './entities/lesson.entity';
 
 @Injectable()
 export class LessonService {
-  fileService: any;
-  constructor(@InjectModel(Lesson) private lessonRepository: typeof Lesson) { }
-  async create(createLessonDto: CreateLessonDto, img: any) {
+  constructor(@InjectModel(Lesson) private lessonRepository: typeof Lesson,
+  private readonly fileService: FilesService) { }
+  async create(createLessonDto: CreateLessonDto, file: any) {
     try {
 
-      const fileName = await this.fileService.createFile(img)
+      const fileName = await this.fileService.createFile(file)
       const lesson = await this.lessonRepository.create({
         ...createLessonDto,
-        image: fileName
+        video: fileName
       })
       return lesson
     } catch (error) {
@@ -44,18 +45,18 @@ export class LessonService {
     }
   }
 
-  async update(id: number, updateLessonDto: UpdateLessonDto, img: any) {
+  async update(id: number, updateLessonDto: UpdateLessonDto, file: any) {
     try {
       const test = await this.lessonRepository.findByPk(id)
       if (!test) throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND)
 
-      if (!img) {
-        await this.fileService.removeFile(test.image)
-        const fileName = await this.fileService.createFile(img)
+      if (!file) {
+        await this.fileService.removeFile(test.video)
+        const fileName = await this.fileService.createFile(file)
 
         return await this.lessonRepository.update({
           ...updateLessonDto,
-            image: fileName
+            video: fileName
         }, {
           where: { id: id },
           returning: true

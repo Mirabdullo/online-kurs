@@ -1,5 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
+import { EnrolledCourse } from '../../enrolled_course/entities/enrolled_course.entity';
+import { LikedCourse } from '../../liked_course/entities/liked_course.entity';
 
 @Table({ tableName: 'student', timestamps: true, paranoid: true })
 export class Student extends Model<Student> {
@@ -63,4 +65,10 @@ export class Student extends Model<Student> {
     defaultValue: true,
   })
   is_active: boolean;
+
+  @HasMany(() => EnrolledCourse)
+  enrolledCourse: EnrolledCourse[]
+
+  @HasMany(() => LikedCourse)
+  likedCourse: LikedCourse[]
 }

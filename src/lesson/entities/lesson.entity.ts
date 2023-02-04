@@ -1,11 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
+import { Modules } from '../../modules/entities/module.entity';
 
-@Table({ tableName: 'category', timestamps: true, paranoid: true })
+@Table({ tableName: 'lessons', timestamps: true, paranoid: true })
 export class Lesson extends Model<Lesson> {
-    static image(image: any) {
-      throw new Error('Method not implemented.');
-    }
+
     @ApiProperty({ example: '1', description: 'Unikal id' })
     @Column({
         type: DataType.INTEGER,
@@ -37,17 +36,14 @@ export class Lesson extends Model<Lesson> {
     description: string;
 
     @ApiProperty({ example: '52225', description: 'module_id idsi' })
+    @ForeignKey(() => Modules)
     @Column({
         type: DataType.INTEGER,
         allowNull: false,
     })
     module_id: number;
 
-    @ApiProperty({ example: 'Image', description: 'Image nomi' })
-    @Column({
-        type: DataType.STRING,
-        allowNull: false,
-    })
-    image: string;
+    @BelongsTo(() => Modules)
+    module: Modules
 
 }

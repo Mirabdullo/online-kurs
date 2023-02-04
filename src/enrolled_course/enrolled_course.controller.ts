@@ -2,7 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { EnrolledCourseService } from './enrolled_course.service';
 import { CreateEnrolledCourseDto } from './dto/create-enrolled_course.dto';
 import { UpdateEnrolledCourseDto } from './dto/update-enrolled_course.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('enrolled course')
 @Controller('enrolled-course')
 export class EnrolledCourseController {
   constructor(private readonly enrolledCourseService: EnrolledCourseService) {}

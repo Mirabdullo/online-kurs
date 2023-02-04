@@ -25,6 +25,15 @@ export class StudentsController {
     return this.studentsService.signin(createStudentDto, res);
   }
 
+
+  @ApiOperation({ summary: 'Student logout qilish' })
+  @ApiResponse({ status: 200, type: Student })
+  @Get('logout/:id')
+  logout(@Param('id') id: string){
+    return this.studentsService.logout(+id)
+  }
+
+
   @ApiOperation({ summary: 'Barcha studentlar royxatini olish' })
   @ApiResponse({ status: 200, type: Student })
   @Get('all')

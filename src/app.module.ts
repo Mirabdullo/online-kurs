@@ -14,6 +14,8 @@ import { LessonModule } from './lesson/lesson.module';
 import { RateModule } from './rate/rate.module';
 import { EnrolledCourseModule } from './enrolled_course/enrolled_course.module';
 import { LikedCourseModule } from './liked_course/liked_course.module';
+import { ModulesModule } from './modules/modules.module';
+import { Category } from './category/entities/category.entity';
 
 @Module({
   imports: [
@@ -29,14 +31,14 @@ import { LikedCourseModule } from './liked_course/liked_course.module';
       inject: [ConfigService],
       useFactory: async (config: ConfigService) => ({
         dialect: 'postgres',
-        host: config.get<string>('POSTGRES_HOST'),
+        host: config.get<string>('POSTGRES_HOST') || '127.0.0.1',
         port: config.get<number>('POSTGRES_PORT'),
         username: config.get<string>('POSTGRES_USER'),
         password: config.get<string>('POSTGRES_PASSWORD'),
         database: config.get<string>('POSTGRES_DB'),
-        models: [__dirname + 'dist/**/*.entity{.ts,.js}'],
+        models: [Category],
         autoLoadModels: true,
-        synchronize: true,
+        // synchronize: true,
         logging: false,
       }),
     }),
@@ -54,6 +56,8 @@ import { LikedCourseModule } from './liked_course/liked_course.module';
     EnrolledCourseModule,
 
     LikedCourseModule,
+
+    ModulesModule,
   ],
   controllers: [],
   providers: [],

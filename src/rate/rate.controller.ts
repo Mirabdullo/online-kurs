@@ -25,6 +25,14 @@ export class RateController {
   }
 
   @ApiOperation({summary: "Id orqali reytingni chiqarish"})
+  @ApiResponse({status: 200, type: [Rate]})
+  @Get('rating/:id')
+  rateCourse(@Param('id') id: string) {
+    return this.rateService.findOne(+id)
+  }
+
+
+  @ApiOperation({summary: "Id orqali reytingni chiqarish"})
   @ApiResponse({status: 200, type: Rate})
   @Get(':id')
   findOne(@Param('id') id: string) {

@@ -25,6 +25,12 @@ export class AdminsController {
     return this.adminsService.signin(createAdminDto, res);
   }
 
+  @ApiOperation({ summary: 'Admin logout qilish' })
+  @ApiResponse({ status: 200, type: Admin })
+  @Get('logout/:id')
+  logout(@Param('id') id: string){
+    return this.adminsService.logout(+id)
+  }
 
   @ApiOperation({ summary: 'Barcha adminlar royxati' })
   @ApiResponse({ status: 200, type: Admin })

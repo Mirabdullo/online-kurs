@@ -1,5 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Column, DataType, Model, Table } from "sequelize-typescript";
+import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
+import { Course } from "../../course/entities/course.entity";
+import { Student } from "../../students/entities/student.entity";
 
 @Table({tableName: "enrolled_course", timestamps: true, paranoid: true})
 export class EnrolledCourse extends Model<EnrolledCourse> {
@@ -13,16 +15,21 @@ export class EnrolledCourse extends Model<EnrolledCourse> {
     id: number
 
     @ApiProperty({example: "2", description: "Student id"})
+    @ForeignKey(() => Student)
     @Column({
         type: DataType.INTEGER,
-        allowNull: false
+        allowNull: true
     })
     student_id: number
 
     @ApiProperty({example: "2", description: "Course id"})
+    @ForeignKey(() => Course)
     @Column({
         type: DataType.INTEGER,
-        allowNull: false
+        allowNull: true
     })
     course_id: number
+
+    @BelongsTo(() => Course)
+    courses: [Course]
 }

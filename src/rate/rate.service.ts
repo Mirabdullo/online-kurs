@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import sequelize from 'sequelize';
+import { Sequelize } from 'sequelize-typescript';
 import { CreateRateDto } from './dto/create-rate.dto';
 import { UpdateRateDto } from './dto/update-rate.dto';
 import { Rate } from './entities/rate.entity';
@@ -26,6 +27,30 @@ export class RateService {
 
     }
   }
+
+
+  async rateCourse(id:number){
+    try {
+      const data = await this.rateRepository.findAll({where: {course_id: id}})
+      let totalAmount = 0
+      let descriptions = []
+      data.forEach(item => {
+        totalAmount += item.rate
+        descriptions.push(item.description)
+      })
+
+      return {
+        rating: totalAmount / data.length--,
+        descriptions
+      }
+      
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException(error)
+    }
+  }
+
+
 
   async findOne(id: number) {
     try {

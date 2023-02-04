@@ -8,24 +8,25 @@ export class FilesService {
     async createFile(file: any): Promise<string>{
         try {
             let extname: string
-            if(file.mimetype === 'image/jpeg'){
-                extname = '.jpeg'
-            } else if(file.mimetype === 'image/png'){
-                extname = '.png'
+            if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png'){
+                const fileName = uuid.v4() + '.jpeg'
+                const filePath = path.resolve(__dirname, '..', 'static', 'images')
+                if(!fs.existsSync(filePath)){
+                    fs.mkdirSync(filePath, {recursive: true})
+                }
+                fs.writeFileSync(path.join(filePath,fileName), file.buffer)
+                return fileName
             } else if(file.mimetype === 'video/mp4'){
-                extname = '.mp4'
-            }else if(file.mimetype === 'application/pdf'){
-                extname = '.pdf'
+                const fileName = uuid.v4() + '.mp4'
+                const filePath = path.resolve(__dirname, '..', 'static', 'videos')
+                if(!fs.existsSync(filePath)){
+                    fs.mkdirSync(filePath, {recursive: true})
+                }
+                fs.writeFileSync(path.join(filePath,fileName), file.buffer)
+                return fileName
             } else {
-                throw new BadRequestException("Xato fayl kiritildi! (.jpeg  .png .mp4  .pdf) fayllar kiritilishi mumkin")
+                throw new BadRequestException("Xato fayl kiritildi! (.jpeg  .png .mp4 ) fayllar kiritilishi mumkin")
             }
-            const fileName = uuid.v4() + extname
-            const filePath = path.resolve(__dirname, '..', 'static')
-            if(!fs.existsSync(filePath)){
-                fs.mkdirSync(filePath, {recursive: true})
-            }
-            fs.writeFileSync(path.join(filePath,fileName), file.buffer)
-            return fileName
         } catch (error) {
             console.log(error);
             throw new HttpException(
@@ -36,11 +37,20 @@ export class FilesService {
     }
 
 
-    async removeFile(image: any){
+    async removeFile(file: any){
         try {
-            const filePath = path.resolve(__dirname, '..', 'static')
-            fs.unlinkSync(path.join(filePath,image))
-            return true
+            if(file.mimetype === 'image/jpeg'){
+                const filePath = path.resolve(__dirname, '../', 'static/', 'images')
+                fs.unlinkSync(path.join(filePath,file))
+                return true
+            }else if(file.mimetype === 'video/mp4'){
+                const filePath = path.resolve(__dirname, '../', 'static', 'videos')
+                fs.unlinkSync(path.join(filePath,file))
+                return true
+            }else {
+                throw new HttpException("Faylni yangilashda xatolik", HttpStatus.FAILED_DEPENDENCY)
+            }
+
         } catch (error) {
             throw new HttpException("Faylni yangilashda xatolik", HttpStatus.INTERNAL_SERVER_ERROR)
         }

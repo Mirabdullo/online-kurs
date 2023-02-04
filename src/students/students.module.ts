@@ -5,9 +5,11 @@ import { SequelizeModule } from "@nestjs/sequelize";
 import { Student } from "./entities/student.entity";
 import { JwtModule } from "@nestjs/jwt";
 import { TokensModule } from "../tokens/tokens.module";
+import { LikedCourse } from "../liked_course/entities/liked_course.entity";
+import { EnrolledCourse } from "../enrolled_course/entities/enrolled_course.entity";
 
 @Module({
-  imports: [SequelizeModule.forFeature([Student]), TokensModule],
+  imports: [SequelizeModule.forFeature([Student, LikedCourse, EnrolledCourse]), TokensModule],
   controllers: [StudentsController],
   providers: [StudentsService],
 })

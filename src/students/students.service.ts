@@ -1,6 +1,8 @@
 import {
   BadRequestException,
   ForbiddenException,
+  HttpException,
+  HttpStatus,
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
@@ -98,6 +100,28 @@ export class StudentsService {
       throw new InternalServerErrorException(error.message);
     }
   }
+
+
+
+  async logout(id: number){
+    try {
+      const admin = await this.studentRepository.findByPk(id)
+      if(!admin){
+        throw new HttpException('Not found', HttpStatus.NOT_FOUND)
+      }
+
+      return await this.studentRepository.update({
+        is_active: false
+      },{where: {id: id}})
+      
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException(error)
+    }
+  }
+
+
+
 
   async findAll() {
     try {

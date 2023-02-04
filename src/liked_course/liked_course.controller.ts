@@ -2,7 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { LikedCourseService } from './liked_course.service';
 import { CreateLikedCourseDto } from './dto/create-liked_course.dto';
 import { UpdateLikedCourseDto } from './dto/update-liked_course.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Liked course')
 @Controller('liked-course')
 export class LikedCourseController {
   constructor(private readonly likedCourseService: LikedCourseService) {}

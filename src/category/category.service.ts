@@ -11,6 +11,7 @@ export class CategoryService {
     try {
       return await this.categoryRepository.create(createCategoryDto)
     } catch (error) {
+      console.log(error);
       throw new InternalServerErrorException(error.message)
     }
   }

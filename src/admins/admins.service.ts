@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { TokensService } from '../tokens/tokens.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
@@ -94,6 +94,26 @@ export class AdminsService {
       throw new InternalServerErrorException(error.message);
     }
   }
+
+
+  async logout(id: number){
+    try {
+      const admin = await this.adminRepository.findByPk(id)
+      if(!admin){
+        throw new HttpException('Not found', HttpStatus.NOT_FOUND)
+      }
+
+      return await this.adminRepository.update({
+        is_active: false
+      },{where: {id: id}})
+      
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException(error)
+    }
+  }
+
+
 
   async findAll() {
     try {
