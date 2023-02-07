@@ -29,7 +29,11 @@ export class EnrolledCourse extends Model<EnrolledCourse> {
         allowNull: true
     })
     course_id: number
-
+    
+    @BelongsTo(() => Student)
+    student: Student
+    
     @BelongsTo(() => Course)
     courses: [Course]
+
 }

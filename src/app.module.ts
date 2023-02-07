@@ -18,6 +18,19 @@ import { ModulesModule } from './modules/modules.module';
 import { Category } from './category/entities/category.entity';
 import { ViewedModule } from './viewed/viewed.module';
 
+
+import { Admin } from './admins/entities/admin.entity';
+import { Student } from './students/entities/student.entity';
+import { Modules } from './modules/entities/module.entity';
+import { Course } from './course/entities/course.entity';
+import { Lesson } from './lesson/entities/lesson.entity';
+import { Rate } from './rate/entities/rate.entity';
+import { EnrolledCourse } from './enrolled_course/entities/enrolled_course.entity';
+import { LikedCourse } from './liked_course/entities/liked_course.entity';
+import { Viewed } from './viewed/entities/viewed.entity';
+import { ModuleTests } from './module_test/entities/module_test.entity';
+
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -27,22 +40,36 @@ import { ViewedModule } from './viewed/viewed.module';
     ServeStaticModule.forRoot({
       rootPath: resolve(__dirname, 'static'),
     }),
-    SequelizeModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: async (config: ConfigService) => ({
-        dialect: 'postgres',
-        host: config.get<string>('POSTGRES_HOST') || '127.0.0.1',
-        port: config.get<number>('POSTGRES_PORT'),
-        username: config.get<string>('POSTGRES_USER'),
-        password: config.get<string>('POSTGRES_PASSWORD'),
-        database: config.get<string>('POSTGRES_DB'),
-        models: [Category],
-        autoLoadModels: true,
-        // synchronize: true,
-        logging: false,
-      }),
+
+    SequelizeModule.forRoot({
+      dialect: 'postgres',
+      host: process.env.POSTGRES_HOST,
+      port: Number(process.env.POSTGRES_PORT),
+      username: process.env.POSTGRES_USER,
+      password: process.env.POSTGRES_PASSWORD,
+      database: process.env.POSTGRES_DB,
+      models: [Admin, Category, Student, Modules, Course, Lesson, Rate, EnrolledCourse, LikedCourse, Viewed, ModuleTests],
+      autoLoadModels: true,
+      logging: false,
+
     }),
+
+    // SequelizeModule.forRootAsync({
+    //   imports: [ConfigModule],
+    //   inject: [ConfigService],
+    //   useFactory: async (config: ConfigService) => ({
+    //     dialect: 'postgres',
+    //     host: config.get<string>('POSTGRES_HOST'),
+    //     port: config.get<number>('POSTGRES_PORT'),
+    //     username: config.get<string>('POSTGRES_USER'),
+    //     password: config.get<string>('POSTGRES_PASSWORD'),
+    //     database: config.get<string>('POSTGRES_DB'),
+    //     models: [Category],
+    //     autoLoadModels: true,
+    //     synchronize: true,
+    //     logging: false,
+    //   }),
+    // }),
 
     AdminsModule,
     StudentsModule,

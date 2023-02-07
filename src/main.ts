@@ -3,17 +3,17 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser'
-import { ConfigService } from '@nestjs/config';
+// import dotenv from 'dotenv'
+// dotenv.config()
+
 
 
 async function start() {
   
   const app = await NestFactory.create(AppModule);
-  const config = app.get(ConfigService)
 
-  const PORT = config.get<number>('PORT')
+  const PORT = process.env.PORT
 
-  console.log(config.get('POSTGRES_PASSWORD'));
 
   // app.useGlobalPipes(new ValidationPipe())
   app.use(cookieParser())
