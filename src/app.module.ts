@@ -16,6 +16,7 @@ import { EnrolledCourseModule } from './enrolled_course/enrolled_course.module';
 import { LikedCourseModule } from './liked_course/liked_course.module';
 import { ModulesModule } from './modules/modules.module';
 import { Category } from './category/entities/category.entity';
+import { ViewedModule } from './viewed/viewed.module';
 
 @Module({
   imports: [
@@ -58,6 +59,8 @@ import { Category } from './category/entities/category.entity';
     LikedCourseModule,
 
     ModulesModule,
+
+    ViewedModule,
   ],
   controllers: [],
   providers: [],
