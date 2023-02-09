@@ -12,7 +12,11 @@ export class LikedCourseService {
   ) {}
   async create(createLikedCourseDto: CreateLikedCourseDto) {
     try {
-      return await this.likedRepository.create(createLikedCourseDto);
+      await this.likedRepository.create(createLikedCourseDto);
+      return {
+        statusCode: 201,
+        message: "Created"
+      }
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
@@ -20,7 +24,7 @@ export class LikedCourseService {
 
   async findAll() {
     try {
-      return await this.likedRepository.findAll({ include: { all: true } });
+      return await this.likedRepository.findAll({ attributes: ["student_id", "course_id"], include: { all: true } });
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
@@ -28,9 +32,9 @@ export class LikedCourseService {
 
   async findOne(id: number) {
     try {
-      const data = await this.likedRepository.findByPk(id);
+      const data = await this.likedRepository.findByPk(id, {attributes: ["student_id", "course_id"]});
       if (!data) {
-        throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+        return new HttpException('Not Found', HttpStatus.NOT_FOUND);
       }
       return data;
     } catch (error) {
@@ -42,11 +46,10 @@ export class LikedCourseService {
     try {
       const enrolled = await this.likedRepository.findByPk(id);
       if (!enrolled)
-        throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND);
+        return new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND);
 
       return await this.likedRepository.update(updateLikedCourseDto, {
         where: { id: id },
-        returning: true,
       });
     } catch (error) {
       throw new InternalServerErrorException(error.message);
@@ -57,7 +60,7 @@ export class LikedCourseService {
     try {
       const enrolled = await this.likedRepository.findByPk(id);
       if (!enrolled)
-        throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND);
+        return new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND);
       return await this.likedRepository.destroy({ where: { id: id } });
     } catch (error) {
       throw new InternalServerErrorException(error.message);

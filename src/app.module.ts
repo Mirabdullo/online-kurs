@@ -41,35 +41,22 @@ import { ModuleTests } from './module_test/entities/module_test.entity';
       rootPath: resolve(__dirname, 'static'),
     }),
 
-    SequelizeModule.forRoot({
-      dialect: 'postgres',
-      host: process.env.POSTGRES_HOST,
-      port: Number(process.env.POSTGRES_PORT),
-      username: process.env.POSTGRES_USER,
-      password: process.env.POSTGRES_PASSWORD,
-      database: process.env.POSTGRES_DB,
-      models: [Admin, Category, Student, Modules, Course, Lesson, Rate, EnrolledCourse, LikedCourse, Viewed, ModuleTests],
-      autoLoadModels: true,
-      logging: false,
-
+    SequelizeModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (config: ConfigService) => ({
+        dialect: 'postgres',
+        host: config.get<string>('POSTGRES_HOST'),
+        port: config.get<number>('POSTGRES_PORT'),
+        username: config.get<string>('POSTGRES_USER'),
+        password: config.get<string>('POSTGRES_PASSWORD'),
+        database: config.get<string>('POSTGRES_DB'),
+        models: [Admin, Category, Student, Modules, Course, Lesson, Rate, EnrolledCourse, LikedCourse, Viewed, ModuleTests],
+        autoLoadModels: true,
+        synchronize: true,
+        logging: false,
+      }),
     }),
-
-    // SequelizeModule.forRootAsync({
-    //   imports: [ConfigModule],
-    //   inject: [ConfigService],
-    //   useFactory: async (config: ConfigService) => ({
-    //     dialect: 'postgres',
-    //     host: config.get<string>('POSTGRES_HOST'),
-    //     port: config.get<number>('POSTGRES_PORT'),
-    //     username: config.get<string>('POSTGRES_USER'),
-    //     password: config.get<string>('POSTGRES_PASSWORD'),
-    //     database: config.get<string>('POSTGRES_DB'),
-    //     models: [Category],
-    //     autoLoadModels: true,
-    //     synchronize: true,
-    //     logging: false,
-    //   }),
-    // }),
 
     AdminsModule,
     StudentsModule,

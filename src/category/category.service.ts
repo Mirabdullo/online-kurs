@@ -9,7 +9,11 @@ export class CategoryService {
   constructor(@InjectModel(Category) private categoryRepository: typeof Category) { }
   async create(createCategoryDto: CreateCategoryDto) {
     try {
-      return await this.categoryRepository.create(createCategoryDto)
+      await this.categoryRepository.create(createCategoryDto)
+      return {
+        statusCode: 201,
+        message: "Created"
+      }
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException(error.message)
@@ -18,7 +22,7 @@ export class CategoryService {
 
   async findAll() {
     try {
-      return await this.categoryRepository.findAll({ include: { all: true } })
+      return await this.categoryRepository.findAll({ attributes: ["category_name"] })
     } catch (error) {
       throw new InternalServerErrorException(error.message)
 
@@ -27,9 +31,9 @@ export class CategoryService {
 
   async findOne(id: number) {
     try {
-      const data = await this.categoryRepository.findByPk(id)
+      const data = await this.categoryRepository.findByPk(id,{ attributes: ["category_name"] })
       if (!data) {
-        throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
+        return new HttpException('Not Found', HttpStatus.NOT_FOUND)
       }
       return data
     } catch (error) {
@@ -41,9 +45,9 @@ export class CategoryService {
   async update(id: number, updateCategoryDto: UpdateCategoryDto) {
     try {
       const test = await this.categoryRepository.findByPk(id)
-      if (!test) throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND)
+      if (!test) return new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND)
 
-      return await this.categoryRepository.update(updateCategoryDto, { where: { id: id }, returning: true })
+      return await this.categoryRepository.update(updateCategoryDto, { where: { id: id } })
     } catch (error) {
       throw new InternalServerErrorException(error.message)
     }
@@ -52,7 +56,7 @@ export class CategoryService {
   async remove(id: number) {
     try {
       const test = await this.categoryRepository.findByPk(id)
-      if (!test) throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND)
+      if (!test) return new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND)
       return await this.categoryRepository.destroy({ where: { id: id } })
     } catch (error) {
       throw new InternalServerErrorException(error.message)

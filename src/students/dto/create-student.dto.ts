@@ -24,7 +24,4 @@ export class CreateStudentDto {
     @IsString({message: "password must be a string"})
     password: string
 
-
-
-
 }

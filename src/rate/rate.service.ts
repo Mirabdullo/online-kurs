@@ -11,7 +11,11 @@ export class RateService {
   constructor(@InjectModel(Rate) private rateRepository: typeof Rate) { }
   async create(createRateDto: CreateRateDto) {
     try {
-      return await this.rateRepository.create(createRateDto)
+      await this.rateRepository.create(createRateDto)
+      return {
+        statusCode: 201,
+        message: "Created"
+      }
     } catch (error) {
       throw new InternalServerErrorException(error.message)
     }
@@ -21,7 +25,7 @@ export class RateService {
 
   async findAll() {
     try {
-      return await this.rateRepository.findAll({ include: { all: true } })
+      return await this.rateRepository.findAll({attributes: ["student_id", "course_id", "rate", "description"], include: { all: true } })
     } catch (error) {
       throw new InternalServerErrorException(error.message)
 
@@ -40,7 +44,7 @@ export class RateService {
       })
 
       return {
-        rating: totalAmount / data.length--,
+        rating: totalAmount / data.length,
         descriptions
       }
       
@@ -54,9 +58,9 @@ export class RateService {
 
   async findOne(id: number) {
     try {
-      const data = await this.rateRepository.findByPk(id)
+      const data = await this.rateRepository.findByPk(id, {attributes: ["student_id", "course_id", "rate", "description"], include: { all: true } })
       if (!data) {
-        throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
+        return new HttpException('Not Found', HttpStatus.NOT_FOUND)
       }
       return data
     } catch (error) {
@@ -68,7 +72,7 @@ export class RateService {
   async update(id: number, updateRateDto: UpdateRateDto) {
     try {
       const rate = await this.rateRepository.findByPk(id)
-      if (!rate) throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND)
+      if (!rate) return new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND)
 
       return await this.rateRepository.update(updateRateDto, { where: { id: id }, returning: true })
     } catch (error) {
@@ -79,7 +83,7 @@ export class RateService {
   async remove(id: number) {
     try {
       const rate = await this.rateRepository.findByPk(id)
-      if (!rate) throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND)
+      if (!rate) return new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND)
       return await this.rateRepository.destroy({ where: { id: id } })
     } catch (error) {
       throw new InternalServerErrorException(error.message)

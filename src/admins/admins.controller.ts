@@ -3,6 +3,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { AdminsService } from './admins.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
+import { LoginDto } from './dto/login-auth.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 import { Admin } from './entities/admin.entity';
 
@@ -19,10 +20,10 @@ export class AdminsController {
   }
 
   @ApiOperation({ summary: 'Admin uchun signin qilish' })
-  @ApiResponse({ status: 200, type: Admin })
+  @ApiResponse({ status: 200, type: LoginDto })
   @Post('signin')
-  signin(@Body() createAdminDto: CreateAdminDto, @Res({passthrough: true}) res: Response)  {
-    return this.adminsService.signin(createAdminDto, res);
+  signin(@Body() loginAdminDto: LoginDto, @Res({passthrough: true}) res: Response)  {
+    return this.adminsService.signin(loginAdminDto, res);
   }
 
   @ApiOperation({ summary: 'Admin logout qilish' })

@@ -20,7 +20,7 @@ export class AdminsService {
         where: { email: createAdminDto.email },
       });
       if (condidate) {
-        throw new BadRequestException('Bunday foydalanuvchi mavjud');
+        return new HttpException('Bunday foydalanuvchi mavjud', HttpStatus.BAD_REQUEST);
       }
 
       const hashedPassword = await bcrypt.hash(createAdminDto.password, 7);
@@ -63,13 +63,14 @@ export class AdminsService {
       });
 
       if (!email)
-        throw new BadRequestException(
+        return new BadRequestException(
           "Ma'lumotlar topilmadi ro'yxatdan o'ting",
         );
 
+
       const passwordMatches = await bcrypt.compare(password, admin.password);
       if (!passwordMatches)
-        throw new BadRequestException("Email yoki password noto'g'ri");
+        return new BadRequestException("password noto'g'ri");
 
       const tokens = await this.tokenService.getTokens(
         admin.id,
@@ -100,7 +101,7 @@ export class AdminsService {
     try {
       const admin = await this.adminRepository.findByPk(id)
       if(!admin){
-        throw new HttpException('Not found', HttpStatus.NOT_FOUND)
+        return new HttpException('Not found', HttpStatus.NOT_FOUND)
       }
 
       return await this.adminRepository.update({
@@ -117,7 +118,7 @@ export class AdminsService {
 
   async findAll() {
     try {
-      return await this.adminRepository.findAll({ include: { all: true } });
+      return await this.adminRepository.findAll({ attributes: ["first_name", "last_name", "email",] });
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException(error.message);
@@ -127,8 +128,7 @@ export class AdminsService {
   async findOne(id: number) {
     try {
       return await this.adminRepository.findByPk(id, {
-        paranoid: false,
-        include: { all: true },
+        attributes: ["first_name", "last_name", "email",],
       });
     } catch (error) {
       console.log(error);
@@ -139,7 +139,7 @@ export class AdminsService {
   async update(id: number, updateAdminDto: UpdateAdminDto) {
     try {
       const admin = await this.adminRepository.findByPk(id);
-      if (!admin) throw new BadRequestException("Id noto'g'ri");
+      if (!admin) return new BadRequestException("Id noto'g'ri");
 
       return await this.adminRepository.update(updateAdminDto, {
         where: { id },
@@ -153,7 +153,7 @@ export class AdminsService {
   async remove(id: number) {
     try {
       const admin = await this.adminRepository.findByPk(id);
-      if (!admin) throw new BadRequestException("Ma'lumotlar topilmadi");
+      if (!admin) return new BadRequestException("Ma'lumotlar topilmadi");
 
       await this.adminRepository.destroy({
         where: { id },

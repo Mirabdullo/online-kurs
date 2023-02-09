@@ -15,7 +15,7 @@ async function start() {
   const PORT = process.env.PORT
 
 
-  app.useGlobalPipes(new ValidationPipe())
+  // app.useGlobalPipes(new ValidationPipe())
   app.use(cookieParser())
 
   const swagger = new DocumentBuilder()

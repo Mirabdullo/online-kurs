@@ -17,7 +17,10 @@ export class LessonService {
         ...createLessonDto,
         video: fileName
       })
-      return lesson
+      return {
+        statusCode: 201,
+        message: "Created"
+      }
     } catch (error) {
       throw new InternalServerErrorException(error.message)
     }
@@ -25,7 +28,7 @@ export class LessonService {
 
   async findAll() {
     try {
-      return await this.lessonRepository.findAll({ include: { all: true } })
+      return await this.lessonRepository.findAll({ attributes: ["title", "video", "description", "module_id"], include: { all: true } })
     } catch (error) {
       throw new InternalServerErrorException(error.message)
 
@@ -34,9 +37,9 @@ export class LessonService {
 
   async findOne(id: number) {
     try {
-      const data = await this.lessonRepository.findByPk(id)
+      const data = await this.lessonRepository.findByPk(id, { attributes: ["title", "video", "description", "module_id"], include: { all: true } })
       if (!data) {
-        throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
+        return new HttpException('Not Found', HttpStatus.NOT_FOUND)
       }
       return data
     } catch (error) {
@@ -48,7 +51,7 @@ export class LessonService {
   async update(id: number, updateLessonDto: UpdateLessonDto, file: any) {
     try {
       const test = await this.lessonRepository.findByPk(id)
-      if (!test) throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND)
+      if (!test) return new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND)
 
       if (!file) {
         await this.fileService.removeFile(test.video)
@@ -59,10 +62,9 @@ export class LessonService {
             video: fileName
         }, {
           where: { id: id },
-          returning: true
         })
       }
-      return await this.lessonRepository.update(updateLessonDto, { where: { id: id }, returning: true })
+      return await this.lessonRepository.update(updateLessonDto, { where: { id: id } })
     } catch (error) {
       throw new InternalServerErrorException(error.message)
     }
@@ -71,7 +73,7 @@ export class LessonService {
   async remove(id: number) {
     try {
       const test = await this.lessonRepository.findByPk(id)
-      if (!test) throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND)
+      if (!test) return new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND)
       return await this.lessonRepository.destroy({ where: { id: id } })
     } catch (error) {
       throw new InternalServerErrorException(error.message)

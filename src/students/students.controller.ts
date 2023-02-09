@@ -5,6 +5,7 @@ import { UpdateStudentDto } from './dto/update-student.dto';
 import { Response } from 'express';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Student } from './entities/student.entity';
+import { LoginDto } from './dto/login-auth.dto';
 
 @ApiTags('Student')
 @Controller('students')
@@ -21,8 +22,8 @@ export class StudentsController {
   @ApiOperation({ summary: 'Student uchun signin qilish' })
   @ApiResponse({ status: 200, type: Student })
   @Post('signin')
-  signin(@Body() createStudentDto: CreateStudentDto, @Res({ passthrough: true }) res: Response) {
-    return this.studentsService.signin(createStudentDto, res);
+  signin(@Body() loginStudentDto: LoginDto, @Res({ passthrough: true }) res: Response) {
+    return this.studentsService.signin(loginStudentDto, res);
   }
 
 

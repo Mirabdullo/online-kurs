@@ -18,7 +18,10 @@ export class CourseService {
         ...createCourseDto,
         image: fileName
       })
-      return course
+      return {
+        statusCode: 201,
+        message: "Created"
+      }
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException(error.message)
@@ -27,7 +30,7 @@ export class CourseService {
 
   async findAll() {
     try {
-      return await this.courseRepository.findAll({include: {all: true}})
+      return await this.courseRepository.findAll({attributes: ["category_id", "title", "description", "image", "price"]})
     } catch (error) {
       throw new InternalServerErrorException(error.message)
     }
@@ -35,7 +38,7 @@ export class CourseService {
 
   async findOne(id: number) {
     try {
-      return await this.courseRepository.findByPk(id, {include: {all: true}})
+      return await this.courseRepository.findByPk(id, {attributes: ["category_id", "title", "description", "image", "price"]})
     } catch (error) {
       throw new InternalServerErrorException(error.message)
     }
@@ -44,7 +47,7 @@ export class CourseService {
   async update(id: number, updateCourseDto: UpdateCourseDto, file: any) {
     try {
       const course = await this.courseRepository.findByPk(id)
-      if(!course) throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND)
+      if(!course) return new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND)
       
       if(!file){
         await this.fileService.removeFile(course.image)
@@ -55,7 +58,7 @@ export class CourseService {
           image: fileName
         },{
           where: {id: id},
-          returning: true
+          
         })
 
         
@@ -69,7 +72,7 @@ export class CourseService {
   async remove(id: number) {
     try {
       const course = await this.courseRepository.findByPk(id)
-      if(!course) throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND)
+      if(!course) return new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND)
       
       return await this.courseRepository.destroy({where: {id: id}})
     } catch (error) {

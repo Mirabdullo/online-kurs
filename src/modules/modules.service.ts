@@ -32,7 +32,7 @@ export class ModulesService {
 
   async findAll() {
     try {
-      return await this.lessonRepository.findAll({ include: { all: true } });
+      return await this.lessonRepository.findAll({attributes: ["course_id", "title", "description", "image"], include: { all: true } });
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
@@ -40,9 +40,9 @@ export class ModulesService {
 
   async findOne(id: number) {
     try {
-      const data = await this.lessonRepository.findByPk(id);
+      const data = await this.lessonRepository.findByPk(id,{attributes: ["course_id", "title", "description", "image"], include: { all: true } });
       if (!data) {
-        throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+        return new HttpException('Not Found', HttpStatus.NOT_FOUND);
       }
       return data;
     } catch (error) {
@@ -52,12 +52,12 @@ export class ModulesService {
 
   async update(id: number, updateModuleDto: UpdateModuleDto, file: any) {
     try {
-      const test = await this.lessonRepository.findByPk(id);
-      if (!test)
-        throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND);
+      const data = await this.lessonRepository.findByPk(id);
+      if (!data)
+        return new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND);
 
-      if (!file) {
-        await this.fileService.removeFile(test.image);
+      if (file) {
+        await this.fileService.removeFile(data.image);
         const fileName = await this.fileService.createFile(file);
 
         return await this.lessonRepository.update(
@@ -67,13 +67,12 @@ export class ModulesService {
           },
           {
             where: { id: id },
-            returning: true,
+
           },
         );
       }
       return await this.lessonRepository.update(updateModuleDto, {
         where: { id: id },
-        returning: true,
       });
     } catch (error) {
       throw new InternalServerErrorException(error.message);
@@ -82,9 +81,9 @@ export class ModulesService {
 
   async remove(id: number) {
     try {
-      const test = await this.lessonRepository.findByPk(id);
-      if (!test)
-        throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND);
+      const data = await this.lessonRepository.findByPk(id);
+      if (!data)
+        return new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND);
       return await this.lessonRepository.destroy({ where: { id: id } });
     } catch (error) {
       throw new InternalServerErrorException(error.message);

@@ -17,7 +17,11 @@ export class EnrolledCourseService {
   ) {}
   async create(createEnrolledCourseDto: CreateEnrolledCourseDto) {
     try {
-      return await this.enrolledRepository.create(createEnrolledCourseDto);
+      await this.enrolledRepository.create(createEnrolledCourseDto);
+      return {
+        statusCode: 201,
+        message: "Created"
+      }
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
@@ -25,7 +29,7 @@ export class EnrolledCourseService {
 
   async findAll() {
     try {
-      return await this.enrolledRepository.findAll({ include: { all: true } });
+      return await this.enrolledRepository.findAll({ attributes: ["student_id", "course_id"], include: {all: true}});
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
@@ -33,9 +37,9 @@ export class EnrolledCourseService {
 
   async findOne(id: number) {
     try {
-      const data = await this.enrolledRepository.findByPk(id);
+      const data = await this.enrolledRepository.findByPk(id,{attributes: ["student_id", "course_id"], include: {all: true}});
       if (!data) {
-        throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+        return new HttpException('Not Found', HttpStatus.NOT_FOUND);
       }
       return data;
     } catch (error) {
@@ -47,11 +51,11 @@ export class EnrolledCourseService {
     try {
       const enrolled = await this.enrolledRepository.findByPk(id);
       if (!enrolled)
-        throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND);
+        return new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND);
 
       return await this.enrolledRepository.update(updateEnrolledCourseDto, {
         where: { id: id },
-        returning: true,
+
       });
     } catch (error) {
       throw new InternalServerErrorException(error.message);
@@ -62,7 +66,7 @@ export class EnrolledCourseService {
     try {
       const enrolled = await this.enrolledRepository.findByPk(id);
       if (!enrolled)
-        throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND);
+        return new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND);
       return await this.enrolledRepository.destroy({ where: { id: id } });
     } catch (error) {
       throw new InternalServerErrorException(error.message);

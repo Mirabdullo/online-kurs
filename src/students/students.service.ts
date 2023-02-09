@@ -28,7 +28,7 @@ export class StudentsService {
         where: { email: createStudentDto.email },
       });
       if (student) {
-        throw new BadRequestException('Bunday foydalanuvchi mavjud');
+        return new BadRequestException('Bunday foydalanuvchi mavjud');
       }
       const hashedPassword = await bcrypt.hash(createStudentDto.password, 7);
 
@@ -69,13 +69,13 @@ export class StudentsService {
       });
 
       if (!email)
-        throw new BadRequestException(
-          "Ma'lumotlar topilmadi ro'yxatdan o'ting",
+        return new BadRequestException(
+          "Email not'g'ri",
         );
 
       const passwordMatches = await bcrypt.compare(password, student.password);
       if (!passwordMatches)
-        throw new BadRequestException("Email yoki password noto'g'ri");
+        return new BadRequestException("Password noto'g'ri");
 
       const tokens = await this.tokenService.getTokens(
         student.id,
@@ -125,7 +125,7 @@ export class StudentsService {
 
   async findAll() {
     try {
-      return await this.studentRepository.findAll({ include: { all: true } });
+      return await this.studentRepository.findAll({attributes: ["first_name", "last_name", "email"]});
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException(error.message);
@@ -136,7 +136,7 @@ export class StudentsService {
     try {
       return await this.studentRepository.findByPk(id, {
         paranoid: false,
-        include: { all: true },
+        attributes: ["first_name", "last_name", "email"],
       });
     } catch (error) {
       console.log(error);
