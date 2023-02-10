@@ -1,15 +1,15 @@
 import { ApiProperty } from "@nestjs/swagger"
-import { IsNumber, IsOptional } from "class-validator"
+import { IsNumber, IsOptional, IsUUID } from "class-validator"
 
 export class CreateLikedCourseDto {
-    @ApiProperty({example: "2", description: "Student id"})
+    @ApiProperty({example: "173ef952-79bb-489d-9cfc-62db0d8114b4", description: "Student id"})
     @IsOptional()
-    @IsNumber()
-    student_id: number
+    @IsUUID()
+    student_id: string
     
-    @ApiProperty({example: "2", description: "Course id"})
+    @ApiProperty({example: "173ef952-79bb-489d-9cfc-62db0d8114b4", description: "Course id"})
     @IsOptional()
-    @IsNumber()
-    course_id: number
+    @IsUUID()
+    course_id: string
 
 }

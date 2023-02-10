@@ -1,10 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsNotEmpty, IsNumber, IsNumberString, IsOptional, IsString, IsUUID } from "class-validator";
 
 export class CreateModuleDto {
-    @ApiProperty({ example: '1', description: 'Course id' })
-    @IsNumber()
-    course_id: number;
+    @ApiProperty({ example: '173ef952-79bb-489d-9cfc-62db0d8114b4', description: 'Course id' })
+    @IsUUID()
+    course_id: string;
 
     @ApiProperty({ example: 'Title', description: 'title nomi' })
     @IsNotEmpty()

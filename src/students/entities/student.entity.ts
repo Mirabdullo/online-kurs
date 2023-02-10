@@ -5,14 +5,16 @@ import { LikedCourse } from '../../liked_course/entities/liked_course.entity';
 
 @Table({ tableName: 'student', timestamps: true, paranoid: true })
 export class Student extends Model<Student> {
-  @ApiProperty({ example: '1', description: 'Unikal id' })
+  @ApiProperty({
+    example: '173ef952-79bb-489d-9cfc-62db0d8114b4',
+    description: 'Unikal id',
+  })
   @Column({
-    type: DataType.INTEGER,
-    unique: true,
-    autoIncrement: true,
+    type: DataType.UUID,
+    defaultValue: DataType.UUIDV4,
     primaryKey: true,
   })
-  id: number;
+  id: string;
 
   @ApiProperty({ example: 'Akmal', description: 'Studentning ismi' })
   @Column({
@@ -46,7 +48,6 @@ export class Student extends Model<Student> {
   })
   password: string;
 
-
   @ApiProperty({
     example: '039q4uriojf03fh03-rih4qefjq9rf-3pojedfq-weod-p3rj',
     description: 'Studentning hashlangan refresh tokeni',
@@ -67,8 +68,8 @@ export class Student extends Model<Student> {
   is_active: boolean;
 
   @HasMany(() => EnrolledCourse)
-  enrolledCourse: EnrolledCourse[]
+  enrolledCourse: EnrolledCourse[];
 
   @HasMany(() => LikedCourse)
-  likedCourse: LikedCourse[]
+  likedCourse: LikedCourse[];
 }

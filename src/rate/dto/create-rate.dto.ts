@@ -2,13 +2,13 @@ import { ApiProperty } from "@nestjs/swagger"
 import { IsNumber, IsOptional, IsString } from "class-validator"
 
 export class CreateRateDto {
-    @ApiProperty({example: "2", description: "baholagan studentning idsi"})
+    @ApiProperty({example: "173ef952-79bb-489d-9cfc-62db0d8114b4", description: "baholagan studentning idsi"})
     @IsNumber()
-    student_id: number
+    student_id: string
 
-    @ApiProperty({example: '2', description: "Kursning idsi"})
+    @ApiProperty({example: '173ef952-79bb-489d-9cfc-62db0d8114b4', description: "Kursning idsi"})
     @IsNumber()
-    course_id: number
+    course_id: string
 
     @ApiProperty({example: "5", description: "Cursga qoygan bahosi "})
     @IsNumber()

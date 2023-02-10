@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFile, UseInterceptors } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
 import { ModulesService } from './modules.service';
 import { CreateModuleDto } from './dto/create-module.dto';
 import { UpdateModuleDto } from './dto/update-module.dto';
@@ -15,7 +25,7 @@ export class ModulesController {
   @ApiResponse({ status: 201, type: Modules })
   @UseInterceptors(FileInterceptor('image'))
   @Post()
-  create(@Body() createModuleDto: CreateModuleDto, @UploadedFile() file: any ) {
+  create(@Body() createModuleDto: CreateModuleDto, @UploadedFile() file: any) {
     return this.modulesService.create(createModuleDto, file);
   }
 
@@ -30,22 +40,25 @@ export class ModulesController {
   @ApiResponse({ status: 200, type: Modules })
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.modulesService.findOne(+id);
+    return this.modulesService.findOne(id);
   }
 
   @ApiOperation({ summary: 'Id orqali bitta moduleni ozgartirish' })
   @ApiResponse({ status: 200, type: Modules })
   @UseInterceptors(FileInterceptor('image'))
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateModuleDto: UpdateModuleDto, @UploadedFile() file: any) {
-    return this.modulesService.update(+id, updateModuleDto, file);
+  update(
+    @Param('id') id: string,
+    @Body() updateModuleDto: UpdateModuleDto,
+    @UploadedFile() file: any,
+  ) {
+    return this.modulesService.update(id, updateModuleDto, file);
   }
-
 
   @ApiOperation({ summary: 'Id orqali bitta moduleni ochirish' })
   @ApiResponse({ status: 200, type: Modules })
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.modulesService.remove(+id);
+    return this.modulesService.remove(id);
   }
 }

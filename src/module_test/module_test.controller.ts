@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ModuleTestService } from './module_test.service';
 import { CreateModuleTestDto } from './dto/create-module_test.dto';
 import { UpdateModuleTestDto } from './dto/update-module_test.dto';
@@ -28,20 +36,23 @@ export class ModuleTestController {
   @ApiResponse({ status: 200, type: ModuleTests })
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.moduleTestService.findOne(+id);
+    return this.moduleTestService.findOne(id);
   }
 
   @ApiOperation({ summary: 'Testni ozgartirish' })
   @ApiResponse({ status: 200, type: ModuleTests })
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateModuleTestDto: UpdateModuleTestDto) {
-    return this.moduleTestService.update(+id, updateModuleTestDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateModuleTestDto: UpdateModuleTestDto,
+  ) {
+    return this.moduleTestService.update(id, updateModuleTestDto);
   }
 
   @ApiOperation({ summary: 'Testni ochirish' })
   @ApiResponse({ status: 200, type: ModuleTests })
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.moduleTestService.remove(+id);
+    return this.moduleTestService.remove(id);
   }
 }

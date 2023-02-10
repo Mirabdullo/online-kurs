@@ -2,21 +2,21 @@ import { ApiProperty } from "@nestjs/swagger"
 import { IsNumber, IsOptional } from "class-validator"
 
 export class CreateViewedDto {
-    @ApiProperty({example: '2', description: "Studentning idsi"})
+    @ApiProperty({example: '173ef952-79bb-489d-9cfc-62db0d8114b4', description: "Studentning idsi"})
     @IsNumber()
-    student_id: number
+    student_id: string
 
-    @ApiProperty({example: '2', description: "Course idsi"})
+    @ApiProperty({example: '173ef952-79bb-489d-9cfc-62db0d8114b4', description: "Course idsi"})
     @IsNumber()
-    course_id: number
+    course_id: string
 
-    @ApiProperty({example: '2', description: "Module idsi"})
+    @ApiProperty({example: '173ef952-79bb-489d-9cfc-62db0d8114b4', description: "Module idsi"})
     @IsNumber()
-    module_id: number
+    module_id: string
 
-    @ApiProperty({example: '2', description: "Lesson idsi"})
+    @ApiProperty({example: '173ef952-79bb-489d-9cfc-62db0d8114b4', description: "Lesson idsi"})
     @IsNumber()
-    lesson_id: number
+    lesson_id: string
 
     @ApiProperty({example: '30%', description: "Modulni tugatgan qismi"})
     @IsOptional()

@@ -1,18 +1,26 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
+import {
+  Column,
+  DataType,
+  ForeignKey,
+  Model,
+  Table,
+} from 'sequelize-typescript';
 import { Course } from '../../course/entities/course.entity';
 import { Modules } from '../../modules/entities/module.entity';
 
 @Table({ tableName: 'module-test', timestamps: true, paranoid: true })
 export class ModuleTests extends Model<ModuleTests> {
-  @ApiProperty({ example: '1', description: 'Unikal id' })
+  @ApiProperty({
+    example: '173ef952-79bb-489d-9cfc-62db0d8114b4',
+    description: 'Unikal id',
+  })
   @Column({
-    type: DataType.INTEGER,
-    unique: true,
-    autoIncrement: true,
+    type: DataType.UUID,
+    defaultValue: DataType.UUIDV4,
     primaryKey: true,
   })
-  id: number;
+  id: string;
 
   @ApiProperty({ example: '1', description: 'Qaysi coursega tegishliligi' })
   @ForeignKey(() => Course)
@@ -40,14 +48,12 @@ export class ModuleTests extends Model<ModuleTests> {
   })
   question: string;
 
-
   @ApiProperty({ example: 'Dasturlash', description: ' Birinchi variant' })
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
   select_first: string;
-
 
   @ApiProperty({
     example: 'Dasturlash',
@@ -58,10 +64,9 @@ export class ModuleTests extends Model<ModuleTests> {
   })
   select_two: string;
 
-
   @ApiProperty({
     example: 'Dasturlash',
-    description: "Uchinchi variant",
+    description: 'Uchinchi variant',
   })
   @Column({
     type: DataType.STRING,

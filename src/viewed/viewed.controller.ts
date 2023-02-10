@@ -1,8 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ViewedService } from './viewed.service';
 import { CreateViewedDto } from './dto/create-viewed.dto';
 import { UpdateViewedDto } from './dto/update-viewed.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Viewed')
 @Controller('viewed')
 export class ViewedController {
   constructor(private readonly viewedService: ViewedService) {}
@@ -19,16 +29,16 @@ export class ViewedController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.viewedService.findOne(+id);
+    return this.viewedService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateViewedDto: UpdateViewedDto) {
-    return this.viewedService.update(+id, updateViewedDto);
+    return this.viewedService.update(id, updateViewedDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.viewedService.remove(+id);
+    return this.viewedService.remove(id);
   }
 }

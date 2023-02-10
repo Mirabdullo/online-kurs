@@ -6,12 +6,11 @@ import { Column, DataType, Model, Table } from 'sequelize-typescript';
 export class Category extends Model<Category> {
     @ApiProperty({ example: '1', description: 'Unikal id' })
     @Column({
-        type: DataType.INTEGER,
-        unique: true,
-        autoIncrement: true,
+        type: DataType.UUID,
+        defaultValue: DataType.UUIDV4,
         primaryKey: true,
     })
-    id: number;
+    id: string;
 
     @ApiProperty({ example: 'Matematika', description: 'Category nomi' })
     @Column({

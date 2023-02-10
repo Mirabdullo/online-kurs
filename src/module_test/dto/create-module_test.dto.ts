@@ -2,13 +2,13 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class CreateModuleTestDto {
-    @ApiProperty({ example: '1', description: 'Qaysi coursega tegishliligi' })
+    @ApiProperty({ example: '173ef952-79bb-489d-9cfc-62db0d8114b4', description: 'Qaysi coursega tegishliligi' })
     @IsNumber()
-    course_id: number;
+    course_id: string;
   
-    @ApiProperty({ example: '1', description: 'Qaysi modulega tegishliligi' })
+    @ApiProperty({ example: '173ef952-79bb-489d-9cfc-62db0d8114b4', description: 'Qaysi modulega tegishliligi' })
     @IsNumber()
-    module_id: number;
+    module_id: string;
   
     @ApiProperty({
       example: 'Dasturlash nima?',

@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import sequelize from 'sequelize';
 import { Sequelize } from 'sequelize-typescript';
@@ -8,85 +13,90 @@ import { Rate } from './entities/rate.entity';
 
 @Injectable()
 export class RateService {
-  constructor(@InjectModel(Rate) private rateRepository: typeof Rate) { }
+  constructor(@InjectModel(Rate) private rateRepository: typeof Rate) {}
   async create(createRateDto: CreateRateDto) {
     try {
-      await this.rateRepository.create(createRateDto)
+      await this.rateRepository.create(createRateDto);
       return {
         statusCode: 201,
-        message: "Created"
-      }
+        message: 'Created',
+      };
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
-
-
 
   async findAll() {
     try {
-      return await this.rateRepository.findAll({attributes: ["student_id", "course_id", "rate", "description"], include: { all: true } })
+      return await this.rateRepository.findAll({
+        attributes: ['student_id', 'course_id', 'rate', 'description'],
+        include: { all: true },
+      });
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
-
+      throw new InternalServerErrorException(error.message);
     }
   }
 
-
-  async rateCourse(id:number){
+  async rateCourse(id: string) {
     try {
-      const data = await this.rateRepository.findAll({where: {course_id: id}})
-      let totalAmount = 0
-      let descriptions = []
-      data.forEach(item => {
-        totalAmount += item.rate
-        descriptions.push(item.description)
-      })
+      const data = await this.rateRepository.findAll({
+        where: { course_id: id },
+      });
+      let totalAmount = 0;
+      let descriptions = [];
+      data.forEach((item) => {
+        totalAmount += item.rate;
+        descriptions.push(item.description);
+      });
 
       return {
         rating: totalAmount / data.length,
-        descriptions
-      }
-      
+        descriptions,
+      };
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException(error)
+      throw new InternalServerErrorException(error);
     }
   }
 
-
-
-  async findOne(id: number) {
+  async findOne(id: string) {
     try {
-      const data = await this.rateRepository.findByPk(id, {attributes: ["student_id", "course_id", "rate", "description"], include: { all: true } })
+      const data = await this.rateRepository.findByPk(id, {
+        attributes: ['student_id', 'course_id', 'rate', 'description'],
+        include: { all: true },
+      });
       if (!data) {
-        return new HttpException('Not Found', HttpStatus.NOT_FOUND)
+        throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
       }
-      return data
+      return data;
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
-
+      throw new InternalServerErrorException(error.message);
     }
   }
 
-  async update(id: number, updateRateDto: UpdateRateDto) {
+  async update(id: string, updateRateDto: UpdateRateDto) {
     try {
-      const rate = await this.rateRepository.findByPk(id)
-      if (!rate) return new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND)
+      const rate = await this.rateRepository.findByPk(id);
+      if (!rate)
+        throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND);
 
-      return await this.rateRepository.update(updateRateDto, { where: { id: id }, returning: true })
+      return await this.rateRepository.update(updateRateDto, {
+        where: { id: id },
+        returning: true,
+      });
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     try {
-      const rate = await this.rateRepository.findByPk(id)
-      if (!rate) return new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND)
-      return await this.rateRepository.destroy({ where: { id: id } })
+      const rate = await this.rateRepository.findByPk(id);
+      if (!rate)
+        throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND);
+      return await this.rateRepository.destroy({ where: { id: id } });
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 }

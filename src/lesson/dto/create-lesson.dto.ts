@@ -1,6 +1,6 @@
 
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID } from "class-validator";
 
 export class CreateLessonDto {
     @ApiProperty({ example: 'lesson', description: 'Title nomi' })
@@ -22,8 +22,8 @@ export class CreateLessonDto {
 
     @ApiProperty({ example: '155', description: 'Module idsi' })
     @IsNotEmpty()
-    @IsNumber({}, { message: "module_id must be a number" })
-    module_id: number
+    @IsUUID()
+    module_id: string
 
     @ApiProperty({ example: 'Rasm', description: 'rasm nomi' })
     @IsNotEmpty()

@@ -1,9 +1,15 @@
-import { BadRequestException, HttpException, HttpStatus, Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { TokensService } from '../tokens/tokens.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 import { Admin } from './entities/admin.entity';
-import * as bcrypt from 'bcryptjs'
+import * as bcrypt from 'bcryptjs';
 import { LoginDto } from './dto/login-auth.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { Response } from 'express';
@@ -20,7 +26,10 @@ export class AdminsService {
         where: { email: createAdminDto.email },
       });
       if (condidate) {
-        return new HttpException('Bunday foydalanuvchi mavjud', HttpStatus.BAD_REQUEST);
+        throw new HttpException(
+          'Bunday foydalanuvchi mavjud',
+          HttpStatus.BAD_REQUEST,
+        );
       }
 
       const hashedPassword = await bcrypt.hash(createAdminDto.password, 7);
@@ -50,7 +59,7 @@ export class AdminsService {
       };
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException(error.message);
+      throw new HttpException(error.message, error.status);
     }
   }
 
@@ -63,14 +72,12 @@ export class AdminsService {
       });
 
       if (!email)
-        return new BadRequestException(
+        throw new BadRequestException(
           "Ma'lumotlar topilmadi ro'yxatdan o'ting",
         );
 
-
       const passwordMatches = await bcrypt.compare(password, admin.password);
-      if (!passwordMatches)
-        return new BadRequestException("password noto'g'ri");
+      if (!passwordMatches) throw new BadRequestException("password noto'g'ri");
 
       const tokens = await this.tokenService.getTokens(
         admin.id,
@@ -92,68 +99,69 @@ export class AdminsService {
       };
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException(error.message);
+      throw new HttpException(error.message, error.status);
     }
   }
 
-
-  async logout(id: number){
+  async logout(id: string) {
     try {
-      const admin = await this.adminRepository.findByPk(id)
-      if(!admin){
-        return new HttpException('Not found', HttpStatus.NOT_FOUND)
+      const admin = await this.adminRepository.findByPk(id);
+      if (!admin) {
+        throw new HttpException('Not found', HttpStatus.NOT_FOUND);
       }
 
-      return await this.adminRepository.update({
-        is_active: false
-      },{where: {id: id}})
-      
+      return await this.adminRepository.update(
+        {
+          is_active: false,
+        },
+        { where: { id: id } },
+      );
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException(error)
+      throw new HttpException(error.message, error.status);
     }
   }
-
-
 
   async findAll() {
     try {
-      return await this.adminRepository.findAll({ attributes: ["first_name", "last_name", "email",] });
-    } catch (error) {
-      console.log(error);
-      throw new InternalServerErrorException(error.message);
-    }
-  }
-
-  async findOne(id: number) {
-    try {
-      return await this.adminRepository.findByPk(id, {
-        attributes: ["first_name", "last_name", "email",],
+      return await this.adminRepository.findAll({
+        attributes: ['first_name', 'last_name', 'email'],
       });
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException(error.message);
+      throw new HttpException(error.message, error.status);
     }
   }
 
-  async update(id: number, updateAdminDto: UpdateAdminDto) {
+  async findOne(id: string) {
+    try {
+      return await this.adminRepository.findByPk(id, {
+        attributes: ['first_name', 'last_name', 'email'],
+      });
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(error.message, error.status);
+    }
+  }
+
+  async update(id: string, updateAdminDto: UpdateAdminDto) {
     try {
       const admin = await this.adminRepository.findByPk(id);
-      if (!admin) return new BadRequestException("Id noto'g'ri");
+      if (!admin) throw new BadRequestException("Id noto'g'ri");
 
       return await this.adminRepository.update(updateAdminDto, {
         where: { id },
       });
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException(error.message);
+      throw new HttpException(error.message, error.status);
     }
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     try {
       const admin = await this.adminRepository.findByPk(id);
-      if (!admin) return new BadRequestException("Ma'lumotlar topilmadi");
+      if (!admin) throw new BadRequestException("Ma'lumotlar topilmadi");
 
       await this.adminRepository.destroy({
         where: { id },
@@ -165,7 +173,7 @@ export class AdminsService {
       };
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException(error.message);
+      throw new HttpException(error.message, error.status);
     }
   }
 }

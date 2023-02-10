@@ -3,14 +3,16 @@ import { Column, DataType, Model, Table } from 'sequelize-typescript';
 
 @Table({ tableName: 'admin', timestamps: true, paranoid: true })
 export class Admin extends Model<Admin> {
-  @ApiProperty({ example: '1', description: 'Unikal id' })
+  @ApiProperty({
+    example: '173ef952-79bb-489d-9cfc-62db0d8114b4',
+    description: 'Unikal id',
+  })
   @Column({
-    type: DataType.INTEGER,
-    unique: true,
-    autoIncrement: true,
+    type: DataType.UUID,
+    defaultValue: DataType.UUIDV4,
     primaryKey: true,
   })
-  id: number;
+  id: string;
 
   @ApiProperty({ example: 'Akmal', description: 'Adminning ismi' })
   @Column({
@@ -37,14 +39,12 @@ export class Admin extends Model<Admin> {
   })
   email: string;
 
-
   @ApiProperty({ example: '#$H@#J@#', description: 'Adminning paroli' })
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
   password: string;
-
 
   @ApiProperty({
     example: '039q4uriojf03fh03-rih4qefjq9rf-3pojedfq-weod-p3rj',
@@ -54,7 +54,6 @@ export class Admin extends Model<Admin> {
     type: DataType.STRING,
   })
   refresh_token: string;
-
 
   @ApiProperty({
     example: 'true / false',

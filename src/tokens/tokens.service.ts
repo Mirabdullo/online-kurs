@@ -7,7 +7,7 @@ export class TokensService {
   constructor(private readonly jwtService: JwtService) {}
 
   async getTokens(
-    id: number,
+    id: string,
     email: string,
     is_creator?: boolean,
     is_active?: boolean,
@@ -35,7 +35,7 @@ export class TokensService {
   }
 
   async updateRefreshTokenHash(
-    id: number,
+    id: string,
     refreshToken: string,
     repository: any,
   ): Promise<void> {

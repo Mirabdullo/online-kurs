@@ -6,63 +6,59 @@ import { Viewed } from './entities/viewed.entity';
 
 @Injectable()
 export class ViewedService {
-  constructor(
-    @InjectModel(Viewed) private viewedRepository: typeof Viewed
-  ) {}
- 
+  constructor(@InjectModel(Viewed) private viewedRepository: typeof Viewed) {}
+
   async create(createViewedDto: CreateViewedDto) {
     try {
-      await this.viewedRepository.create(createViewedDto)
-    
+      await this.viewedRepository.create(createViewedDto);
+
       return {
         statusCode: 201,
-        message: "Created"
-      }
+        message: 'Created',
+      };
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 
   async findAll() {
     try {
-      return await this.viewedRepository.findAll({include: {all: true}})
-    
+      return await this.viewedRepository.findAll({ include: { all: true } });
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     try {
-      return await this.viewedRepository.findByPk(id,{include: {all: true}})
-    
+      return await this.viewedRepository.findByPk(id, {
+        include: { all: true },
+      });
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 
-  
-
-  async update(id: number, updateViewedDto: UpdateViewedDto) {
+  async update(id: string, updateViewedDto: UpdateViewedDto) {
     try {
-      return await this.viewedRepository.update(updateViewedDto, {where: {id: id}})
-    
+      return await this.viewedRepository.update(updateViewedDto, {
+        where: { id: id },
+      });
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     try {
-      return await this.viewedRepository.destroy({where: {id: id}})
-    
+      return await this.viewedRepository.destroy({ where: { id: id } });
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 }
