@@ -18,38 +18,48 @@ export class CourseService {
   ) {}
   async create(createCourseDto: CreateCourseDto, file: any) {
     try {
-      const fileName = await this.fileService.createFile(file);
-      const course = await this.courseRepository.create({
-        ...createCourseDto,
-        image: fileName,
-      });
-      return {
-        statusCode: 201,
-        message: 'Created',
-      };
+      createCourseDto.price = Number(createCourseDto.price)
+      if (file) {
+        const fileName = await this.fileService.createFile(file);
+        await this.courseRepository.create({
+          ...createCourseDto,
+          image: fileName,
+        });
+        return {
+          statusCode: 201,
+          message: 'Created',
+        };
+      } else {
+        await this.courseRepository.create(createCourseDto);
+
+        return {
+          statusCode: 201,
+          message: 'Created',
+        };
+      }
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException(error.message);
+      throw new HttpException(error.message, error.status);
     }
   }
 
   async findAll() {
     try {
       return await this.courseRepository.findAll({
-        attributes: ['category_id', 'title', 'description', 'image', 'price'],
+        attributes: ['id','category_id', 'title', 'description', 'image', 'price'],
       });
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new HttpException(error.message, error.status);
     }
   }
 
   async findOne(id: string) {
     try {
       return await this.courseRepository.findByPk(id, {
-        attributes: ['category_id', 'title', 'description', 'image', 'price'],
+        attributes: ['id','category_id', 'title', 'description', 'image', 'price'],
       });
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new HttpException(error.message, error.status);
     }
   }
 
@@ -78,7 +88,7 @@ export class CourseService {
         returning: true,
       });
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new HttpException(error.message, error.status);
     }
   }
 
@@ -90,7 +100,7 @@ export class CourseService {
 
       return await this.courseRepository.destroy({ where: { id: id } });
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new HttpException(error.message, error.status);
     }
   }
 }

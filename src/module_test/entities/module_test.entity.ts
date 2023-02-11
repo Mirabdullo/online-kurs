@@ -25,18 +25,18 @@ export class ModuleTests extends Model<ModuleTests> {
   @ApiProperty({ example: '1', description: 'Qaysi coursega tegishliligi' })
   @ForeignKey(() => Course)
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.UUID,
     allowNull: false,
   })
-  course_id: number;
+  course_id: string;
 
   @ApiProperty({ example: '1', description: 'Qaysi modulega tegishliligi' })
   @ForeignKey(() => Modules)
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.UUID,
     allowNull: false,
   })
-  module_id: number;
+  module_id: string;
 
   @ApiProperty({
     example: 'Dasturlash nima?',

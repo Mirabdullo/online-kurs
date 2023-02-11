@@ -18,7 +18,7 @@ export class ModulesService {
   ) {}
   async create(createModuleDto: CreateModuleDto, file: any) {
     try {
-      createModuleDto.course_id = Number(createModuleDto.course_id);
+      console.log(file);
       if (file) {
         const fileName = await this.fileService.createFile(file);
         const lesson = await this.moduleRepository.create({
@@ -39,7 +39,7 @@ export class ModulesService {
   async findAll() {
     try {
       return await this.moduleRepository.findAll({
-        attributes: ['course_id', 'title', 'description', 'image'],
+        attributes: ['id','course_id', 'title', 'description', 'image'],
         include: { all: true },
       });
     } catch (error) {
@@ -50,7 +50,7 @@ export class ModulesService {
   async findOne(id: string) {
     try {
       const data = await this.moduleRepository.findByPk(id, {
-        attributes: ['course_id', 'title', 'description', 'image'],
+        attributes: ['id','course_id', 'title', 'description', 'image'],
         include: { all: true },
       });
       if (!data) {

@@ -19,7 +19,7 @@ export class LessonService {
   async create(createLessonDto: CreateLessonDto, file: any) {
     try {
       const fileName = await this.fileService.createFile(file);
-      const lesson = await this.lessonRepository.create({
+      await this.lessonRepository.create({
         ...createLessonDto,
         video: fileName,
       });
@@ -28,25 +28,25 @@ export class LessonService {
         message: 'Created',
       };
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new HttpException(error.message, error.status);
     }
   }
 
   async findAll() {
     try {
       return await this.lessonRepository.findAll({
-        attributes: ['title', 'video', 'description', 'module_id'],
+        attributes: ['id','title', 'video', 'description', 'module_id'],
         include: { all: true },
       });
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new HttpException(error.message, error.status);
     }
   }
 
   async findOne(id: string) {
     try {
       const data = await this.lessonRepository.findByPk(id, {
-        attributes: ['title', 'video', 'description', 'module_id'],
+        attributes: ['id','title', 'video', 'description', 'module_id'],
         include: { all: true },
       });
       if (!data) {
@@ -54,7 +54,7 @@ export class LessonService {
       }
       return data;
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new HttpException(error.message, error.status);
     }
   }
 
@@ -82,7 +82,7 @@ export class LessonService {
         where: { id: id },
       });
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new HttpException(error.message, error.status);
     }
   }
 
@@ -93,7 +93,7 @@ export class LessonService {
         throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND);
       return await this.lessonRepository.destroy({ where: { id: id } });
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new HttpException(error.message, error.status);
     }
   }
 }

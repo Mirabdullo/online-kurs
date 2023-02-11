@@ -26,18 +26,18 @@ export class LikedCourse extends Model<LikedCourse> {
   @ApiProperty({ example: '2', description: 'Student id' })
   @ForeignKey(() => Student)
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.UUID,
     allowNull: true,
   })
-  student_id: number;
+  student_id: string;
 
   @ApiProperty({ example: '2', description: 'Course id' })
   @ForeignKey(() => Course)
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.UUID,
     allowNull: true,
   })
-  course_id: number;
+  course_id: string;
 
   @BelongsTo(() => Course)
   course: Course;

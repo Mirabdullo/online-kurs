@@ -11,7 +11,7 @@ import {
 import { Course } from '../../course/entities/course.entity';
 import { Lesson } from '../../lesson/entities/lesson.entity';
 
-@Table({ tableName: 'modules', timestamps: true, paranoid: true })
+@Table({ tableName: 'modules', timestamps: true,})
 export class Modules extends Model<Modules> {
   @ApiProperty({
     example: '173ef952-79bb-489d-9cfc-62db0d8114b4',
@@ -27,10 +27,10 @@ export class Modules extends Model<Modules> {
   @ApiProperty({ example: '1', description: 'Course id' })
   @ForeignKey(() => Course)
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.UUID,
     allowNull: false,
   })
-  course_id: number;
+  course_id: string;
 
   @ApiProperty({ example: 'Title', description: 'title nomi' })
   @Column({
@@ -46,7 +46,7 @@ export class Modules extends Model<Modules> {
   })
   description: string;
 
-  @ApiProperty({ example: 'Description', description: 'Description nomi' })
+  @ApiProperty({ example: 'media', description: 'media nomi' })
   @Column({
     type: DataType.STRING,
     allowNull: true,

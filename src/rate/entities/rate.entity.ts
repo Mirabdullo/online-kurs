@@ -11,7 +11,7 @@ import { Col } from 'sequelize/types/utils';
 import { Course } from '../../course/entities/course.entity';
 import { Student } from '../../students/entities/student.entity';
 
-@Table({ tableName: 'rate', timestamps: true, paranoid: true })
+@Table({ tableName: 'rate', timestamps: false, })
 export class Rate extends Model<Rate> {
   @ApiProperty({
     example: '173ef952-79bb-489d-9cfc-62db0d8114b4',
@@ -24,21 +24,21 @@ export class Rate extends Model<Rate> {
   })
   id: string;
 
-  @ApiProperty({ example: '2', description: 'baholagan studentning idsi' })
+  @ApiProperty({ example: '173ef952-79bb-489d-9cfc-62db0d8114b4', description: 'baholagan studentning idsi' })
   @ForeignKey(() => Student)
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.UUID,
     allowNull: false,
   })
-  student_id: number;
+  student_id: string;
 
-  @ApiProperty({ example: '2', description: 'Kursning idsi' })
+  @ApiProperty({ example: '173ef952-79bb-489d-9cfc-62db0d8114b4', description: 'Kursning idsi' })
   @ForeignKey(() => Course)
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.UUID,
     allowNull: false,
   })
-  course_id: number;
+  course_id: string;
 
   @ApiProperty({ example: '5', description: 'Cursga qoygan bahosi ' })
   @Column({

@@ -25,31 +25,31 @@ export class Lesson extends Model<Lesson> {
   @ApiProperty({ example: 'Title', description: 'title nomi' })
   @Column({
     type: DataType.STRING,
-    allowNull: false,
+    allowNull: true,
   })
   title: string;
 
   @ApiProperty({ example: 'Video', description: 'Video nomi' })
   @Column({
     type: DataType.STRING,
-    allowNull: false,
+    allowNull: true,
   })
   video: string;
 
   @ApiProperty({ example: 'Description', description: 'Description nomi' })
   @Column({
     type: DataType.STRING,
-    allowNull: false,
+    allowNull: true,
   })
   description: string;
 
-  @ApiProperty({ example: '52225', description: 'module_id idsi' })
+  @ApiProperty({ example: '173ef952-79bb-489d-9cfc-62db0d8114b4', description: 'module_id idsi' })
   @ForeignKey(() => Modules)
   @Column({
-    type: DataType.INTEGER,
-    allowNull: false,
+    type: DataType.UUID,
+    allowNull: true,
   })
-  module_id: number;
+  module_id: string;
 
   @BelongsTo(() => Modules)
   module: Modules;

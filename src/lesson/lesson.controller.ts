@@ -8,22 +8,23 @@ import {
   Delete,
   UploadedFile,
   UseInterceptors,
+  UploadedFiles,
 } from '@nestjs/common';
 import { LessonService } from './lesson.service';
 import { CreateLessonDto } from './dto/create-lesson.dto';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Lesson } from './entities/lesson.entity';
-import { FilesInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor } from '@nestjs/platform-express';
 
-@ApiTags('lesson')
+@ApiTags('Lesson')
 @Controller('lesson')
 export class LessonController {
   constructor(private readonly lessonService: LessonService) {}
 
   @ApiOperation({ summary: 'Lesson yaratish' })
   @ApiResponse({ status: 201, type: Lesson })
-  @UseInterceptors(FilesInterceptor('video'))
+  @UseInterceptors(FileInterceptor('video'))
   @Post()
   create(@Body() createLessonDto: CreateLessonDto, @UploadedFile() file: any) {
     return this.lessonService.create(createLessonDto, file);
@@ -45,7 +46,7 @@ export class LessonController {
 
   @ApiOperation({ summary: 'Lessonni ozgartirish' })
   @ApiResponse({ status: 200, type: Lesson })
-  @UseInterceptors(FilesInterceptor('video'))
+  @UseInterceptors(FileInterceptor('video'))
   @Patch(':id')
   update(
     @Param('id') id: string,

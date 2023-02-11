@@ -31,7 +31,7 @@ export class FilesService {
             console.log(error);
             throw new HttpException(
                 "Faylni yozishda xatolik",
-                HttpStatus.INTERNAL_SERVER_ERROR
+                HttpStatus.FAILED_DEPENDENCY
             )
         }
     }

@@ -24,33 +24,33 @@ export class Viewed extends Model<Viewed> {
   })
   id: string;
 
-  @ApiProperty({ example: '2', description: 'Studentning idsi' })
+  @ApiProperty({ example: '173ef952-79bb-489d-9cfc-62db0d8114b4', description: 'Studentning idsi' })
   @ForeignKey(() => Student)
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.UUID,
   })
-  student_id: number;
+  student_id: string;
 
-  @ApiProperty({ example: '2', description: 'Course idsi' })
+  @ApiProperty({ example: '173ef952-79bb-489d-9cfc-62db0d8114b4', description: 'Course idsi' })
   @ForeignKey(() => Course)
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.UUID,
   })
-  course_id: number;
+  course_id: string;
 
-  @ApiProperty({ example: '2', description: 'Module idsi' })
+  @ApiProperty({ example: '173ef952-79bb-489d-9cfc-62db0d8114b4', description: 'Module idsi' })
   @ForeignKey(() => Modules)
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.UUID,
   })
-  module_id: number;
+  module_id: string;
 
-  @ApiProperty({ example: '2', description: 'Lesson idsi' })
+  @ApiProperty({ example: '173ef952-79bb-489d-9cfc-62db0d8114b4', description: 'Lesson idsi' })
   @ForeignKey(() => Lesson)
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.UUID,
   })
-  lesson_id: number;
+  lesson_id: string;
 
   @ApiProperty({ example: '30%', description: 'Modulni tugatgan qismi' })
   @Column({

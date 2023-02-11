@@ -23,7 +23,7 @@ export class ModuleTestService {
       };
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException(error.message);
+      throw new HttpException(error.message, error.status);
     }
   }
 
@@ -43,7 +43,7 @@ export class ModuleTestService {
         include: { all: true },
       });
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new HttpException(error.message, error.status);
     }
   }
 
@@ -62,7 +62,7 @@ export class ModuleTestService {
         ],
       });
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new HttpException(error.message, error.status);
     }
   }
 
@@ -77,7 +77,7 @@ export class ModuleTestService {
         returning: true,
       });
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new HttpException(error.message, error.status);
     }
   }
 
@@ -89,7 +89,7 @@ export class ModuleTestService {
 
       return await this.testRepository.destroy({ where: { id: id } });
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new HttpException(error.message, error.status);
     }
   }
 }

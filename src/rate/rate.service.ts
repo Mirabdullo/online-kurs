@@ -22,7 +22,7 @@ export class RateService {
         message: 'Created',
       };
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new HttpException(error.message, error.status);
     }
   }
 
@@ -33,7 +33,7 @@ export class RateService {
         include: { all: true },
       });
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new HttpException(error.message, error.status);
     }
   }
 
@@ -70,7 +70,7 @@ export class RateService {
       }
       return data;
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new HttpException(error.message, error.status);
     }
   }
 
@@ -85,7 +85,7 @@ export class RateService {
         returning: true,
       });
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new HttpException(error.message, error.status);
     }
   }
 
@@ -96,7 +96,7 @@ export class RateService {
         throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND);
       return await this.rateRepository.destroy({ where: { id: id } });
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new HttpException(error.message, error.status);
     }
   }
 }

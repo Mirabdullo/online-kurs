@@ -130,7 +130,7 @@ export class StudentsService {
   async findAll() {
     try {
       return await this.studentRepository.findAll({
-        attributes: ['first_name', 'last_name', 'email'],
+        attributes: ['id','first_name', 'last_name', 'email'],
       });
     } catch (error) {
       console.log(error);
@@ -143,7 +143,7 @@ export class StudentsService {
     try {
       return await this.studentRepository.findByPk(id, {
         paranoid: false,
-        attributes: ['first_name', 'last_name', 'email'],
+        attributes: ['id','first_name', 'last_name', 'email'],
       });
     } catch (error) {
       console.log(error);

@@ -23,21 +23,21 @@ export class EnrolledCourse extends Model<EnrolledCourse> {
   })
   id: string;
 
-  @ApiProperty({ example: '2', description: 'Student id' })
+  @ApiProperty({ example: '173ef952-79bb-489d-9cfc-62db0d8114b4', description: 'Student id' })
   @ForeignKey(() => Student)
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.UUID,
     allowNull: true,
   })
-  student_id: number;
+  student_id: string;
 
-  @ApiProperty({ example: '2', description: 'Course id' })
+  @ApiProperty({ example: '173ef952-79bb-489d-9cfc-62db0d8114b4', description: 'Course id' })
   @ForeignKey(() => Course)
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.UUID,
     allowNull: true,
   })
-  course_id: number;
+  course_id: string;
 
   // @BelongsTo(() => Student)
   // student: Student

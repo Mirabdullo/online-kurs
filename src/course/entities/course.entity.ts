@@ -11,6 +11,7 @@ import { Category } from '../../category/entities/category.entity';
 
 @Table({ tableName: 'course', timestamps: true, paranoid: true })
 export class Course extends Model<Course> {
+
   @ApiProperty({
     example: '173ef952-79bb-489d-9cfc-62db0d8114b4',
     description: 'Unikal id',
@@ -22,13 +23,13 @@ export class Course extends Model<Course> {
   })
   id: string;
 
-  @ApiProperty({ example: '1', description: 'Qaysi categoriyaga tegishliligi' })
+  @ApiProperty({ example: '173ef952-79bb-489d-9cfc-62db0d8114b4', description: 'Qaysi categoriyaga tegishliligi' })
   @ForeignKey(() => Category)
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.UUID,
     allowNull: true,
   })
-  category_id: number;
+  category_id: string;
 
   @ApiProperty({ example: 'AAT buhgalteriya', description: 'Course nomi' })
   @Column({

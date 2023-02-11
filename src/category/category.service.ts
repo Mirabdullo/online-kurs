@@ -23,17 +23,17 @@ export class CategoryService {
       };
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException(error.message);
+      throw new HttpException(error.message, error.status);
     }
   }
 
   async findAll() {
     try {
       return await this.categoryRepository.findAll({
-        attributes: ['category_name'],
+        attributes: ['id','category_name'],
       });
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new HttpException(error.message, error.status);
     }
   }
 
@@ -41,14 +41,14 @@ export class CategoryService {
     try {
       console.log(typeof id);
       const data = await this.categoryRepository.findByPk(id, {
-        attributes: ['category_name'],
+        attributes: ['id','category_name'],
       });
       if (!data) {
         throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
       }
       return data;
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new HttpException(error.message, error.status);
     }
   }
 
@@ -62,7 +62,7 @@ export class CategoryService {
         where: { id: id },
       });
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new HttpException(error.message, error.status);
     }
   }
 
@@ -73,7 +73,7 @@ export class CategoryService {
         throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND);
       return await this.categoryRepository.destroy({ where: { id: id } });
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new HttpException(error.message, error.status);
     }
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { HttpException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateViewedDto } from './dto/create-viewed.dto';
 import { UpdateViewedDto } from './dto/update-viewed.dto';
@@ -18,27 +18,27 @@ export class ViewedService {
       };
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException(error.message);
+      throw new HttpException(error.message, error.status);
     }
   }
 
   async findAll() {
     try {
-      return await this.viewedRepository.findAll({ include: { all: true } });
+      return await this.viewedRepository.findAll({ attributes: ['id', 'student_id', 'course_id', 'module_id', 'lesson_id', 'viewed'] });
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException(error.message);
+      throw new HttpException(error.message, error.status);
     }
   }
 
   async findOne(id: string) {
     try {
       return await this.viewedRepository.findByPk(id, {
-        include: { all: true },
+        attributes: ['id', 'student_id', 'course_id', 'module_id', 'lesson_id', 'viewed']
       });
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException(error.message);
+      throw new HttpException(error.message, error.status);
     }
   }
 
@@ -49,7 +49,7 @@ export class ViewedService {
       });
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException(error.message);
+      throw new HttpException(error.message, error.status);
     }
   }
 
@@ -58,7 +58,7 @@ export class ViewedService {
       return await this.viewedRepository.destroy({ where: { id: id } });
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException(error.message);
+      throw new HttpException(error.message, error.status);
     }
   }
 }
