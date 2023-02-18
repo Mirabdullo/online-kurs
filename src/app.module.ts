@@ -75,6 +75,7 @@ import { ModuleTests } from './module_test/entities/module_test.entity';
     ModulesModule,
 
     ViewedModule,
+
   ],
   controllers: [],
   providers: [],

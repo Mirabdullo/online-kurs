@@ -9,7 +9,7 @@ import { LikedCourse } from "../liked_course/entities/liked_course.entity";
 import { EnrolledCourse } from "../enrolled_course/entities/enrolled_course.entity";
 
 @Module({
-  imports: [SequelizeModule.forFeature([Student, LikedCourse, EnrolledCourse]), TokensModule],
+  imports: [SequelizeModule.forFeature([Student, LikedCourse, EnrolledCourse]), TokensModule, JwtModule],
   controllers: [StudentsController],
   providers: [StudentsService],
 })

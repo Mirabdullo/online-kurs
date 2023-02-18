@@ -77,4 +77,15 @@ export class StudentsController {
   remove(@Param('id') id: string) {
     return this.studentsService.remove(id);
   }
+
+
+  @ApiOperation({ summary: 'Student uchun signup qilishi' })
+  @ApiResponse({ status: 201, type: Student })
+  @Post('refresh-token')
+  refreshToken(
+    @Body() token: string,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return this.studentsService.refreshToken(token, res);
+  }
 }

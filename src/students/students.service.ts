@@ -15,12 +15,14 @@ import * as bcrypt from 'bcryptjs';
 import { Request, Response } from 'express';
 import { LoginDto } from './dto/login-auth.dto';
 import { TokensService } from '../tokens/tokens.service';
+import { Json } from 'sequelize/types/utils';
 
 @Injectable()
 export class StudentsService {
   constructor(
     @InjectModel(Student) private studentRepository: typeof Student,
     private readonly tokenService: TokensService,
+    private readonly jwtService: JwtService
   ) {}
 
   // Registrate studen ////////
@@ -30,7 +32,6 @@ export class StudentsService {
     req: Request,
   ) {
     try {
-      console.log(req);
       const student = await this.studentRepository.findOne({
         where: { email: createStudentDto.email },
       });
@@ -58,8 +59,9 @@ export class StudentsService {
 
       await this.tokenService.writeCookie(tokens.refresh_token, res);
       return {
-        statusCode: 201,
-        message: 'Created',
+        id: newStudent.id,
+        access_token: tokens.access_token,
+        refresh_token: tokens.refresh_token,
       };
     } catch (error) {
       console.log(error);
@@ -155,7 +157,7 @@ export class StudentsService {
   async update(id: string, updateStudentDto: UpdateStudentDto) {
     try {
       const student = await this.studentRepository.findByPk(id);
-      if (!student) throw new BadRequestException("Id noto'g'ri");
+      if (!student) throw new BadRequestException("Student not found");
 
       return await this.studentRepository.update(updateStudentDto, {
         where: { id },
@@ -185,4 +187,67 @@ export class StudentsService {
       throw new HttpException(error.message, error.status);
     }
   }
+
+
+
+
+
+
+
+  async refreshToken(token: string, res: Response){
+    try {
+      if(!token){
+        throw new HttpException("Token Not Found", HttpStatus.NOT_FOUND)
+      }
+      const data = await this.jwtService.verify(token['token'],{secret: process.env.REFRESH_TOKEN_KEY})
+      console.log(data);
+      const student = await this.studentRepository.findByPk(data.sub)
+      console.log(student);
+      if(!student){
+        throw new HttpException("Unauthorized", HttpStatus.NOT_FOUND)
+      }
+      console.log(student.refresh_token);
+      const matchesToken = await bcrypt.compare(token['token'], student.refresh_token)
+      console.log(matchesToken);
+      if(!matchesToken){
+        throw new HttpException("Ruxsat etilmagan foydalanuvchi", HttpStatus.BAD_GATEWAY)
+      }
+
+      const tokens = await this.tokenService.getTokens(
+        student.id,
+        student.email,
+        student.is_active,
+      );
+
+      student.refresh_token = tokens.refresh_token
+      student.save()
+
+      await this.tokenService.updateRefreshTokenHash(
+        student.id,
+        tokens.refresh_token,
+        this.studentRepository,
+      );
+
+      await this.tokenService.writeCookie(tokens.refresh_token, res);
+
+      return {
+        access_token: tokens.access_token,
+        refresh_token: tokens.refresh_token,
+      };
+      
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(error.message, error.status)
+    }
+  }
+
+
+
+
+
+
+
+
+
+
 }

@@ -44,7 +44,9 @@ export class TokensService {
       {
         refresh_token: hashedRefreshToken,
       },
-      { where: { id }, returning: true },
+      {
+        where: {id: id}
+      }
     );
   }
 
