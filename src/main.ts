@@ -19,7 +19,7 @@ async function start() {
   app.enableCors()
 
   const swagger = new DocumentBuilder()
-  .setTitle('MohirDev')
+  .setTitle('OLP')
   .setDescription('Rest Api')
   .setVersion('1.0.0')
   .addTag('NodeJs, NestJs, Postgres, Sequalize')
