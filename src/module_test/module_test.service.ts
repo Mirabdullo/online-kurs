@@ -60,6 +60,7 @@ export class ModuleTestService {
           'select_four',
           'answer',
         ],
+        include:{all: true}
       });
     } catch (error) {
       throw new HttpException(error.message, error.status);

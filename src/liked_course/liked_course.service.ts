@@ -42,6 +42,7 @@ export class LikedCourseService {
     try {
       const data = await this.likedRepository.findByPk(id, {
         attributes: ['student_id', 'course_id'],
+        include:{all: true}
       });
       if (!data) {
         throw new HttpException('Not Found', HttpStatus.NOT_FOUND);

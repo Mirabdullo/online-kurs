@@ -47,6 +47,7 @@ export class CourseService {
     try {
       return await this.courseRepository.findAll({
         attributes: ['id','category_id', 'title', 'description', 'image', 'price'],
+        include:{all: true}
       });
     } catch (error) {
       throw new HttpException(error.message, error.status);
@@ -57,6 +58,7 @@ export class CourseService {
     try {
       return await this.courseRepository.findByPk(id, {
         attributes: ['id','category_id', 'title', 'description', 'image', 'price'],
+        include:{all: true}
       });
     } catch (error) {
       throw new HttpException(error.message, error.status);

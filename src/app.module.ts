@@ -29,6 +29,7 @@ import { EnrolledCourse } from './enrolled_course/entities/enrolled_course.entit
 import { LikedCourse } from './liked_course/entities/liked_course.entity';
 import { Viewed } from './viewed/entities/viewed.entity';
 import { ModuleTests } from './module_test/entities/module_test.entity';
+import { HighlightsModule } from './highlights/highlights.module';
 
 
 @Module({
@@ -75,6 +76,8 @@ import { ModuleTests } from './module_test/entities/module_test.entity';
     ModulesModule,
 
     ViewedModule,
+
+    HighlightsModule,
 
   ],
   controllers: [],

@@ -10,6 +10,7 @@ import {
 } from 'sequelize-typescript';
 import { Course } from '../../course/entities/course.entity';
 import { Lesson } from '../../lesson/entities/lesson.entity';
+import { ModuleTests } from '../../module_test/entities/module_test.entity';
 
 @Table({ tableName: 'modules', timestamps: true,})
 export class Modules extends Model<Modules> {
@@ -58,4 +59,7 @@ export class Modules extends Model<Modules> {
 
   @HasMany(() => Lesson)
   lessons: Lesson[];
+
+  @HasMany(() => ModuleTests)
+  test: ModuleTests
 }

@@ -1,3 +1,5 @@
+import { Lesson } from './../lesson/entities/lesson.entity';
+import { Course } from './../course/entities/course.entity';
 import {
   HttpException,
   HttpStatus,
@@ -18,7 +20,6 @@ export class ModulesService {
   ) {}
   async create(createModuleDto: CreateModuleDto, file: any) {
     try {
-      console.log(file);
       if (file) {
         const fileName = await this.fileService.createFile(file);
         const lesson = await this.moduleRepository.create({
@@ -40,7 +41,7 @@ export class ModulesService {
     try {
       return await this.moduleRepository.findAll({
         attributes: ['id','course_id', 'title', 'description', 'image'],
-        include: { all: true },
+        include: {all: true},
       });
     } catch (error) {
       throw new HttpException(error.message, error.status);

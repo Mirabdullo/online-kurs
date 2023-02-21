@@ -91,4 +91,6 @@ export class ModuleTests extends Model<ModuleTests> {
     allowNull: false,
   })
   answer: number;
+
+
 }
