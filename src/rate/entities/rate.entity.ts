@@ -7,7 +7,7 @@ import {
   Model,
   Table,
 } from 'sequelize-typescript';
-import { Col } from 'sequelize/types/utils';
+
 import { Course } from '../../course/entities/course.entity';
 import { Student } from '../../students/entities/student.entity';
 

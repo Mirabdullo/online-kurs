@@ -9,7 +9,7 @@ import {
 } from 'sequelize-typescript';
 import { Modules } from '../../modules/entities/module.entity';
 
-@Table({ tableName: 'lessons', timestamps: true, paranoid: true })
+@Table({ tableName: 'lessons', timestamps: false })
 export class Lesson extends Model<Lesson> {
   @ApiProperty({
     example: '173ef952-79bb-489d-9cfc-62db0d8114b4',

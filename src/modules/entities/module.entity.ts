@@ -12,7 +12,7 @@ import { Course } from '../../course/entities/course.entity';
 import { Lesson } from '../../lesson/entities/lesson.entity';
 import { ModuleTests } from '../../module_test/entities/module_test.entity';
 
-@Table({ tableName: 'modules', timestamps: true,})
+@Table({ tableName: 'modules', timestamps: false})
 export class Modules extends Model<Modules> {
   @ApiProperty({
     example: '173ef952-79bb-489d-9cfc-62db0d8114b4',

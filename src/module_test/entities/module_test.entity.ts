@@ -9,7 +9,7 @@ import {
 import { Course } from '../../course/entities/course.entity';
 import { Modules } from '../../modules/entities/module.entity';
 
-@Table({ tableName: 'module-test', timestamps: true, paranoid: true })
+@Table({ tableName: 'module-test', timestamps: false })
 export class ModuleTests extends Model<ModuleTests> {
   @ApiProperty({
     example: '173ef952-79bb-489d-9cfc-62db0d8114b4',
