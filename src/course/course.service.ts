@@ -5,6 +5,7 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { isArray } from 'class-validator';
 import { FilesService } from '../uploads/files.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
@@ -19,11 +20,14 @@ export class CourseService {
   async create(createCourseDto: CreateCourseDto, file: any) {
     try {
       createCourseDto.price = Number(createCourseDto.price)
+      
       if (file) {
         const fileName = await this.fileService.createFile(file);
+        console.log(fileName);
         await this.courseRepository.create({
           ...createCourseDto,
-          image: fileName,
+          image: fileName[0].split('.')[1] !== 'svg' ? fileName[0] : fileName[1],
+          logo: fileName[0].split('.')[1] === 'svg' ? fileName[0] : fileName[1],
         });
         return {
           statusCode: 201,

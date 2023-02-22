@@ -55,6 +55,13 @@ export class Course extends Model<Course> {
   })
   image: string;
 
+  @ApiProperty({ example: 'image.jpeg', description: 'Course foni uchun rasm' })
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  logo: string;
+
   @ApiProperty({ example: '', description: 'Course narxi' })
   @Column({
     type: DataType.DECIMAL,

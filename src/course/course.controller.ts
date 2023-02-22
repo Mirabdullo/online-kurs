@@ -8,8 +8,9 @@ import {
   Delete,
   UploadedFile,
   UseInterceptors,
+  UploadedFiles,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CourseService } from './course.service';
 import { CreateCourseDto } from './dto/create-course.dto';
@@ -24,9 +25,9 @@ export class CourseController {
   @ApiOperation({ summary: 'Course qoshish' })
   @ApiResponse({ status: 201, type: Course })
   @Post()
-  @UseInterceptors(FileInterceptor('image'))
-  create(@Body() createCourseDto: CreateCourseDto, @UploadedFile() image: any) {
-    return this.courseService.create(createCourseDto, image);
+  @UseInterceptors(FilesInterceptor('file'))
+  create(@Body() createCourseDto: CreateCourseDto, @UploadedFiles() file: any) {
+    return this.courseService.create(createCourseDto, file);
   }
 
   @ApiOperation({ summary: 'Courselar royxati' })
@@ -46,13 +47,13 @@ export class CourseController {
   @ApiOperation({ summary: 'Id orqali bitta course malumotlarini ozgartirish' })
   @ApiResponse({ status: 200, type: Course })
   @Patch(':id')
-  @UseInterceptors(FileInterceptor('image'))
+  @UseInterceptors(FilesInterceptor('file'))
   update(
     @Param('id') id: string,
     @Body() updateCourseDto: UpdateCourseDto,
-    @UploadedFile() image: any,
+    @UploadedFiles() file: any,
   ) {
-    return this.courseService.update(id, updateCourseDto, image);
+    return this.courseService.update(id, updateCourseDto, file);
   }
 
   @ApiOperation({ summary: 'Id orqali courseni ochirish' })
