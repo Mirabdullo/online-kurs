@@ -78,9 +78,13 @@ export class LessonService {
           },
         );
       }
-      return await this.lessonRepository.update(updateLessonDto, {
+      await this.lessonRepository.update(updateLessonDto, {
         where: { id: id },
       });
+      return {
+        statusCode: 200,
+        message: "Updated"
+      }
     } catch (error) {
       throw new HttpException(error.message, error.status);
     }

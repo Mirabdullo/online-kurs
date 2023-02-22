@@ -1,23 +1,23 @@
 import { InjectModel } from '@nestjs/sequelize';
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { CreateHighlightDto } from './dto/create-highlight.dto';
-import { UpdateHighlightDto } from './dto/update-highlight.dto';
-import { Highlight } from './entities/highlight.entity';
+import { CourseHighlight } from './entities/course_highlight.entity';
+import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
+import { CreateCourseHighlightDto } from './dto/create-course_highlight.dto';
+import { UpdateCourseHighlightDto } from './dto/update-course_highlight.dto';
 
 @Injectable()
-export class HighlightsService {
+export class CourseHighlightsService {
   constructor(
-    @InjectModel(Highlight) private highlightRepository: typeof Highlight,
+    @InjectModel(CourseHighlight)
+    private highlightRepository: typeof CourseHighlight,
   ) {}
-  async create(createHighlightDto: CreateHighlightDto) {
+  async create(createCourseHighlightDto: CreateCourseHighlightDto) {
     try {
-      await this.highlightRepository.create(createHighlightDto);
+      await this.highlightRepository.create(createCourseHighlightDto);
       return {
         statusCode: 201,
         message: 'Created',
       };
     } catch (error) {
-      console.log(error);
       throw new HttpException(error.message, error.status);
     }
   }
@@ -25,7 +25,8 @@ export class HighlightsService {
   async findAll() {
     try {
       return await this.highlightRepository.findAll({
-        attributes: ['id','title', "description"],
+        attributes: ["id", 'course_id', 'highlight_id'],
+        include: { all: true },
       });
     } catch (error) {
       throw new HttpException(error.message, error.status);
@@ -34,9 +35,9 @@ export class HighlightsService {
 
   async findOne(id: string) {
     try {
-      console.log(typeof id);
       const data = await this.highlightRepository.findByPk(id, {
-        attributes: ['id','title', "description"],
+        attributes: ["id", 'course_id', 'highlight_id'],
+        include:{all: true}
       });
       if (!data) {
         throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
@@ -47,13 +48,13 @@ export class HighlightsService {
     }
   }
 
-  async update(id: string, updateHighlightDto: UpdateHighlightDto) {
+  async update(id: string, updateCourseHighlightDto: UpdateCourseHighlightDto) {
     try {
-      const highlights = await this.highlightRepository.findByPk(id);
-      if (!highlights)
+      const highlight = await this.highlightRepository.findByPk(id);
+      if (!highlight)
         throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND);
 
-      await this.highlightRepository.update(updateHighlightDto, {
+      await this.highlightRepository.update(updateCourseHighlightDto, {
         where: { id: id },
       });
 
@@ -68,8 +69,8 @@ export class HighlightsService {
 
   async remove(id: string) {
     try {
-      const highlights = await this.highlightRepository.findByPk(id);
-      if (!highlights)
+      const highlight = await this.highlightRepository.findByPk(id);
+      if (!highlight)
         throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND);
       return await this.highlightRepository.destroy({ where: { id: id } });
     } catch (error) {

@@ -16,7 +16,7 @@ export class ModuleTestService {
   ) {}
   async create(createModuleTestDto: CreateModuleTestDto) {
     try {
-      const test = await this.testRepository.create(createModuleTestDto);
+      await this.testRepository.create(createModuleTestDto);
       return {
         statusCode: 201,
         message: 'Created',
@@ -27,7 +27,7 @@ export class ModuleTestService {
     }
   }
 
-  async findAll() {
+  async findAll(id: string) {
     try {
       return await this.testRepository.findAll({
         attributes: [
@@ -40,7 +40,8 @@ export class ModuleTestService {
           'select_four',
           'answer',
         ],
-        include: { all: true },
+        where: {id: id}
+      
       });
     } catch (error) {
       throw new HttpException(error.message, error.status);
@@ -60,7 +61,7 @@ export class ModuleTestService {
           'select_four',
           'answer',
         ],
-        include:{all: true}
+        
       });
     } catch (error) {
       throw new HttpException(error.message, error.status);
@@ -73,10 +74,15 @@ export class ModuleTestService {
       if (!test)
         throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND);
 
-      return await this.testRepository.update(updateModuleTestDto, {
+      await this.testRepository.update(updateModuleTestDto, {
         where: { id: id },
         returning: true,
       });
+
+      return {
+        statusCode: 200,
+        message: "Updated"
+      }
     } catch (error) {
       throw new HttpException(error.message, error.status);
     }

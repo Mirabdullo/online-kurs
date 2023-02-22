@@ -80,10 +80,15 @@ export class RateService {
       if (!rate)
         throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND);
 
-      return await this.rateRepository.update(updateRateDto, {
+      await this.rateRepository.update(updateRateDto, {
         where: { id: id },
         returning: true,
       });
+
+      return {
+        statusCode: 200,
+        message: "Updated"
+      }
     } catch (error) {
       throw new HttpException(error.message, error.status);
     }

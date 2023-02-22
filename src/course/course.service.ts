@@ -85,10 +85,15 @@ export class CourseService {
           },
         );
       }
-      return await this.courseRepository.update(updateCourseDto, {
+      await this.courseRepository.update(updateCourseDto, {
         where: { id: id },
         returning: true,
       });
+
+      return {
+        statusCode: 200,
+        message: "Updated"
+      }
     } catch (error) {
       throw new HttpException(error.message, error.status);
     }

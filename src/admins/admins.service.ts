@@ -149,9 +149,14 @@ export class AdminsService {
       const admin = await this.adminRepository.findByPk(id);
       if (!admin) throw new BadRequestException("Id noto'g'ri");
 
-      return await this.adminRepository.update(updateAdminDto, {
+      await this.adminRepository.update(updateAdminDto, {
         where: { id },
       });
+
+      return {
+        statusCode: 200,
+        message: "Updated"
+      }
     } catch (error) {
       console.log(error);
       throw new HttpException(error.message, error.status);

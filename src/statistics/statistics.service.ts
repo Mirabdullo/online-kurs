@@ -1,22 +1,17 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  InternalServerErrorException,
-} from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
-import { Category } from './entities/category.entity';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { CreateStatisticDto } from './dto/create-statistic.dto';
+import { UpdateStatisticDto } from './dto/update-statistic.dto';
+import { Statistic } from './entities/statistic.entity';
 
 @Injectable()
-export class CategoryService {
+export class StatisticsService {
   constructor(
-    @InjectModel(Category) private categoryRepository: typeof Category,
+    @InjectModel(Statistic) private statisticRepository: typeof Statistic,
   ) {}
-  async create(createCategoryDto: CreateCategoryDto) {
+  async create(createStatisticDto: CreateStatisticDto) {
     try {
-      await this.categoryRepository.create(createCategoryDto);
+      await this.statisticRepository.create(createStatisticDto);
       return {
         statusCode: 201,
         message: 'Created',
@@ -29,8 +24,8 @@ export class CategoryService {
 
   async findAll() {
     try {
-      return await this.categoryRepository.findAll({
-        attributes: ['id','category_name'],
+      return await this.statisticRepository.findAll({
+        attributes: ['id','title', "description"],
       });
     } catch (error) {
       throw new HttpException(error.message, error.status);
@@ -40,8 +35,8 @@ export class CategoryService {
   async findOne(id: string) {
     try {
       console.log(typeof id);
-      const data = await this.categoryRepository.findByPk(id, {
-        attributes: ['id','category_name'],
+      const data = await this.statisticRepository.findByPk(id, {
+        attributes: ['id','title', "description"],
       });
       if (!data) {
         throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
@@ -52,15 +47,16 @@ export class CategoryService {
     }
   }
 
-  async update(id: string, updateCategoryDto: UpdateCategoryDto) {
+  async update(id: string, updateStatisticDto: UpdateStatisticDto) {
     try {
-      const test = await this.categoryRepository.findByPk(id);
-      if (!test)
+      const statistic = await this.statisticRepository.findByPk(id);
+      if (!statistic)
         throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND);
 
-      await this.categoryRepository.update(updateCategoryDto, {
+      await this.statisticRepository.update(updateStatisticDto, {
         where: { id: id },
       });
+
       return {
         statusCode: 200,
         message: "Updated"
@@ -72,10 +68,10 @@ export class CategoryService {
 
   async remove(id: string) {
     try {
-      const test = await this.categoryRepository.findByPk(id);
-      if (!test)
+      const statistic = await this.statisticRepository.findByPk(id);
+      if (!statistic)
         throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND);
-      return await this.categoryRepository.destroy({ where: { id: id } });
+      return await this.statisticRepository.destroy({ where: { id: id } });
     } catch (error) {
       throw new HttpException(error.message, error.status);
     }

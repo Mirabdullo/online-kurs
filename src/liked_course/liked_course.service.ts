@@ -59,9 +59,14 @@ export class LikedCourseService {
       if (!enrolled)
         throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND);
 
-      return await this.likedRepository.update(updateLikedCourseDto, {
+      await this.likedRepository.update(updateLikedCourseDto, {
         where: { id: id },
       });
+
+      return {
+        statusCode: 200,
+        message: "Updated"
+      }
     } catch (error) {
       throw new HttpException(error.message, error.status);
     }

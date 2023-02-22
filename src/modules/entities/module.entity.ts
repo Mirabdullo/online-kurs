@@ -61,5 +61,5 @@ export class Modules extends Model<Modules> {
   lessons: Lesson[];
 
   @HasMany(() => ModuleTests)
-  test: ModuleTests
+  test: ModuleTests[];
 }

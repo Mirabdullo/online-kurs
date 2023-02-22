@@ -60,9 +60,14 @@ export class EnrolledCourseService {
       if (!enrolled)
         throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND);
 
-      return await this.enrolledRepository.update(updateEnrolledCourseDto, {
+      await this.enrolledRepository.update(updateEnrolledCourseDto, {
         where: { id: id },
       });
+
+      return {
+        statusCode: 200,
+        message: "Updated"
+      }
     } catch (error) {
       throw new HttpException(error.message, error.status);
     }

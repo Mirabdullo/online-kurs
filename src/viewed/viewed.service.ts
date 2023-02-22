@@ -44,9 +44,14 @@ export class ViewedService {
 
   async update(id: string, updateViewedDto: UpdateViewedDto) {
     try {
-      return await this.viewedRepository.update(updateViewedDto, {
+      await this.viewedRepository.update(updateViewedDto, {
         where: { id: id },
       });
+
+      return {
+        statusCode: 200,
+        message: "Updated"
+      }
     } catch (error) {
       console.log(error);
       throw new HttpException(error.message, error.status);

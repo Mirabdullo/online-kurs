@@ -83,9 +83,14 @@ export class ModulesService {
           },
         );
       }
-      return await this.moduleRepository.update(updateModuleDto, {
+      await this.moduleRepository.update(updateModuleDto, {
         where: { id: id },
       });
+
+      return {
+        statusCode: 200,
+        message: "Updated"
+      }
     } catch (error) {
       throw new HttpException(error.message, error.status);
     }

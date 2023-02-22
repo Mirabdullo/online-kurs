@@ -159,9 +159,13 @@ export class StudentsService {
       const student = await this.studentRepository.findByPk(id);
       if (!student) throw new BadRequestException("Student not found");
 
-      return await this.studentRepository.update(updateStudentDto, {
+      await this.studentRepository.update(updateStudentDto, {
         where: { id },
       });
+      return {
+        statusCode: 200,
+        message: "Updated"
+      }
     } catch (error) {
       console.log(error);
       throw new HttpException(error.message, error.status);

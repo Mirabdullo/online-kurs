@@ -30,6 +30,8 @@ import { LikedCourse } from './liked_course/entities/liked_course.entity';
 import { Viewed } from './viewed/entities/viewed.entity';
 import { ModuleTests } from './module_test/entities/module_test.entity';
 import { HighlightsModule } from './highlights/highlights.module';
+import { CourseHighlightsModule } from './course_highlights/course_highlights.module';
+import { StatisticsModule } from './statistics/statistics.module';
 
 
 @Module({
@@ -78,6 +80,10 @@ import { HighlightsModule } from './highlights/highlights.module';
     ViewedModule,
 
     HighlightsModule,
+
+    CourseHighlightsModule,
+
+    StatisticsModule,
 
   ],
   controllers: [],

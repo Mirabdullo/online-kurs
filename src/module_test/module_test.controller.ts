@@ -25,11 +25,11 @@ export class ModuleTestController {
     return this.moduleTestService.create(createModuleTestDto);
   }
 
-  @ApiOperation({ summary: 'Barcha testlar royhati' })
-  @ApiResponse({ status: 200, type: ModuleTests })
-  @Get()
-  findAll() {
-    return this.moduleTestService.findAll();
+  @ApiOperation({ summary: 'Module idsi orqali modulega tegishli testlar royxati' })
+  @ApiResponse({ status: 200, type: [ModuleTests] })
+  @Get('moduletest/:id')
+  findAll(@Param('id') id: string) {
+    return this.moduleTestService.findAll(id);
   }
 
   @ApiOperation({ summary: 'id orqali bitta test malumotlari' })
