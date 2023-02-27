@@ -37,6 +37,15 @@ export class LessonController {
     return this.lessonService.findAll();
   }
 
+
+
+  @ApiOperation({ summary: 'Id orqali bitta modulega tegishli darslar royxati' })
+  @ApiResponse({ status: 200, type: [Lesson] })
+  @Get('lessons/:id')
+  findModules(@Param('id') id: string) {
+    return this.lessonService.findModules(id);
+  }
+
   @ApiOperation({ summary: 'id orqali bitta lesson malumotlari' })
   @ApiResponse({ status: 200, type: Lesson })
   @Get(':id')

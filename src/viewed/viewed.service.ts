@@ -1,4 +1,6 @@
-import { HttpException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { LessonService } from './../lesson/lesson.service';
+import { ModulesService } from './../modules/modules.service';
+import { HttpException, Injectable, InternalServerErrorException, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateViewedDto } from './dto/create-viewed.dto';
 import { UpdateViewedDto } from './dto/update-viewed.dto';
@@ -6,7 +8,11 @@ import { Viewed } from './entities/viewed.entity';
 
 @Injectable()
 export class ViewedService {
-  constructor(@InjectModel(Viewed) private viewedRepository: typeof Viewed) {}
+  constructor(
+    @InjectModel(Viewed) private viewedRepository: typeof Viewed,
+    private readonly moduleService: ModulesService,
+    private readonly lessonService: LessonService
+  ) {}
 
   async create(createViewedDto: CreateViewedDto) {
     try {
@@ -39,6 +45,30 @@ export class ViewedService {
     } catch (error) {
       console.log(error);
       throw new HttpException(error.message, error.status);
+    }
+  }
+
+  async findLevelCourses(id: string) {
+    try {
+      const data = await this.moduleService.findCourses(id)
+      if(!data) throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
+      console.log(data);
+      const levels = data.length
+      let courses = 0
+      let lesson = []
+      for(const element of data){
+        lesson = await this.lessonService.findModules(element.dataValues.id)
+        console.log(lesson);
+        courses += lesson.length
+        // lesson = []
+      }
+
+      return {
+        levels: levels,
+        courses: courses
+      }
+    } catch (error) {
+      throw new HttpException(error.message, error.status)
     }
   }
 

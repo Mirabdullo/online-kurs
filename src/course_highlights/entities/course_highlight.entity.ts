@@ -10,7 +10,6 @@ import {
 } from 'sequelize-typescript';
 import { Course } from '../../course/entities/course.entity';
 import { Highlight } from '../../highlights/entities/highlight.entity';
-import { Student } from '../../students/entities/student.entity';
 
 @Table({ tableName: 'course_highlight', timestamps: false })
 export class CourseHighlight extends Model<CourseHighlight> {
@@ -42,5 +41,5 @@ export class CourseHighlight extends Model<CourseHighlight> {
   highlight_id: string;
 
   @BelongsTo(() => Highlight)
-  highlights: Highlight;
+  highlights: Highlight[];
 }

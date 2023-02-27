@@ -50,7 +50,7 @@ export class CourseService {
   async findAll() {
     try {
       return await this.courseRepository.findAll({
-        attributes: ['id','category_id', 'title', 'description', 'image', 'price'],
+        // attributes: ['id','category_id', 'title', 'description', 'image', 'price'],
         include:{all: true}
       });
     } catch (error) {
@@ -61,7 +61,7 @@ export class CourseService {
   async findOne(id: string) {
     try {
       return await this.courseRepository.findByPk(id, {
-        attributes: ['id','category_id', 'title', 'description', 'image', 'price'],
+        // attributes: ['id','category_id', 'title', 'description', 'image', 'price'],
         include:{all: true}
       });
     } catch (error) {
@@ -78,16 +78,39 @@ export class CourseService {
       if (!file) {
         await this.fileService.removeFile(course.image);
         const fileName = await this.fileService.createFile(file);
+        if(fileName.length === 1 && fileName[0].split('.')[1] === 'svg'){
+          return await this.courseRepository.update(
+            {
+              ...updateCourseDto,
+              logo: fileName[0],
+            },
+            {
+              where: { id: id },
+            },
+          );
+        } else if(fileName.length === 1 && fileName[0].split('.')[1] !== 'svg'){
+          return await this.courseRepository.update(
+            {
+              ...updateCourseDto,
+              image: fileName[0]
+            },
+            {
+              where: { id: id },
+            },
+          );
+        } else {
+          return await this.courseRepository.update(
+            {
+              ...updateCourseDto,
+              image: fileName[0].split('.')[1] !== 'svg' ? fileName[0] : fileName[1],
+              logo: fileName[0].split('.')[1] === 'svg' ? fileName[0] : fileName[1],
+            },
+            {
+              where: { id: id },
+            },
+          );
+        }
 
-        return await this.courseRepository.update(
-          {
-            ...updateCourseDto,
-            image: fileName,
-          },
-          {
-            where: { id: id },
-          },
-        );
       }
       await this.courseRepository.update(updateCourseDto, {
         where: { id: id },

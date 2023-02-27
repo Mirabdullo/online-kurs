@@ -3,9 +3,11 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   Column,
   DataType,
+  ForeignKey,
   Model,
   Table,
 } from 'sequelize-typescript';
+import { Course } from '../../course/entities/course.entity';
 
 
 @Table({ tableName: 'statistic', timestamps: false })
@@ -48,4 +50,12 @@ export class Statistic extends Model<Statistic> {
     allowNull: true,
   })
   countries: string;
+
+  @ApiProperty({ example: '100', description: 'Statistics country' })
+  @ForeignKey(() => Course)
+  @Column({
+    type: DataType.UUID,
+    allowNull: true,
+  })
+  course_id: string;
 }

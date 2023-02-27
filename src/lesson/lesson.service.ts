@@ -32,9 +32,22 @@ export class LessonService {
     }
   }
 
+
   async findAll() {
     try {
       return await this.lessonRepository.findAll({
+        attributes: ['id','title', 'video', 'description', 'module_id'],
+        include: { all: true },
+      });
+    } catch (error) {
+      throw new HttpException(error.message, error.status);
+    }
+  }
+
+
+  async findModules(id: string) {
+    try {
+      return await this.lessonRepository.findAll({where: {module_id: id},
         attributes: ['id','title', 'video', 'description', 'module_id'],
         include: { all: true },
       });

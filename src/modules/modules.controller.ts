@@ -36,6 +36,14 @@ export class ModulesController {
     return this.modulesService.findAll();
   }
 
+  @ApiOperation({ summary: 'Modulelar royxati' })
+  @ApiResponse({ status: 200, type: [Modules] })
+  @Get('modules/:id')
+  findCourses(@Param('id') id: string) {
+    return this.modulesService.findCourses(id);
+  }
+
+
   @ApiOperation({ summary: 'Id orqali bitta moduleni olish' })
   @ApiResponse({ status: 200, type: Modules })
   @Get(':id')

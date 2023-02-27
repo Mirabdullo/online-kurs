@@ -11,7 +11,7 @@ import { Lesson } from '../../lesson/entities/lesson.entity';
 import { Modules } from '../../modules/entities/module.entity';
 import { Student } from '../../students/entities/student.entity';
 
-@Table({ tableName: 'viewed', timestamps: true })
+@Table({ tableName: 'viewed', timestamps: false })
 export class Viewed extends Model<Viewed> {
   @ApiProperty({
     example: '173ef952-79bb-489d-9cfc-62db0d8114b4',
@@ -38,24 +38,18 @@ export class Viewed extends Model<Viewed> {
   })
   course_id: string;
 
-  @ApiProperty({ example: '173ef952-79bb-489d-9cfc-62db0d8114b4', description: 'Module idsi' })
+  @ApiProperty({ example: '[173ef952-79bb-489d-9cfc-62db0d8114b4]', description: 'Korilgan modullar royxati' })
   @ForeignKey(() => Modules)
   @Column({
-    type: DataType.UUID,
+    type: DataType.ARRAY(DataType.STRING),
   })
   module_id: string;
 
-  @ApiProperty({ example: '173ef952-79bb-489d-9cfc-62db0d8114b4', description: 'Lesson idsi' })
+  @ApiProperty({ example: '[173ef952-79bb-489d-9cfc-62db0d8114b4]', description: 'Korilgan darslar royxati' })
   @ForeignKey(() => Lesson)
   @Column({
-    type: DataType.UUID,
+    type: DataType.ARRAY(DataType.STRING),
   })
   lesson_id: string;
 
-  @ApiProperty({ example: '30%', description: 'Modulni tugatgan qismi' })
-  @Column({
-    type: DataType.INTEGER,
-    defaultValue: 0,
-  })
-  viewed: number;
 }

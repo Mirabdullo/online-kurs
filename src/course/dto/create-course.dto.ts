@@ -21,25 +21,44 @@ export class CreateCourseDto {
   @IsString({ message: 'title satr bolishi kerak' })
   title: string;
 
+  @ApiProperty({ example: 'AAT buhgalteriya', description: 'Course sub titile' })
+  @IsNotEmpty()
+  @IsString({ message: 'sub title satr bolishi kerak' })
+  sub_title: string;
+
+
   @ApiProperty({
     example: 'Curse haqida',
     description: 'Course haqida malumotlar',
   })
+  @IsNotEmpty()
   @IsString()
   description: string;
-
-
-
-
 
 
   @ApiProperty({ example: 'image.jpeg', description: 'Course foni uchun rasm' })
   @IsOptional()
   @IsString()
-  image: string;
+  price: number;
 
-  @ApiProperty({ example: '500000', description: 'Course narxi' })
+  @ApiProperty({ example: '3', description: 'Course darajasi' })
   @IsOptional()
   @IsNumberString()
-  price: number;
+  level: number;
+
+  @ApiProperty({ example: '66', description: 'Coursegi darslar soni' })
+  @IsOptional()
+  @IsNumberString()
+  lessons: number;
+
+
+  @ApiProperty({ example: '66', description: 'Coursegi darslar soni' })
+  @IsOptional()
+  image: string;
+
+
+  @ApiProperty({ example: '66', description: 'Coursegi darslar soni' })
+  @IsOptional()
+  logo: string;
+
 }

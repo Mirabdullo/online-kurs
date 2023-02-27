@@ -1,3 +1,4 @@
+import { EnrolledCourse } from './../enrolled_course/entities/enrolled_course.entity';
 import {
   BadRequestException,
   ForbiddenException,
@@ -133,6 +134,7 @@ export class StudentsService {
     try {
       return await this.studentRepository.findAll({
         attributes: ['id','first_name', 'last_name', 'email'],
+        include: {all: true}
       });
     } catch (error) {
       console.log(error);
@@ -146,6 +148,7 @@ export class StudentsService {
       return await this.studentRepository.findByPk(id, {
         paranoid: false,
         attributes: ['id','first_name', 'last_name', 'email'],
+        include: {all: true}
       });
     } catch (error) {
       console.log(error);

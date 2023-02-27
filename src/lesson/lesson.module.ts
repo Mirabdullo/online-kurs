@@ -12,5 +12,6 @@ import { Modules } from '../modules/entities/module.entity';
   ],
   controllers: [LessonController],
   providers: [LessonService],
+  exports: [LessonService]
 })
 export class LessonModule {}

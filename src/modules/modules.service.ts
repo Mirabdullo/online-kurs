@@ -3,6 +3,7 @@ import { Course } from './../course/entities/course.entity';
 import {
   HttpException,
   HttpStatus,
+  Inject,
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
@@ -11,6 +12,7 @@ import { FilesService } from '../uploads/files.service';
 import { CreateModuleDto } from './dto/create-module.dto';
 import { UpdateModuleDto } from './dto/update-module.dto';
 import { Modules } from './entities/module.entity';
+import { LessonService } from '../lesson/lesson.service';
 
 @Injectable()
 export class ModulesService {
@@ -39,8 +41,19 @@ export class ModulesService {
 
   async findAll() {
     try {
+      console.log("object");
       return await this.moduleRepository.findAll({
-        attributes: ['id','course_id', 'title', 'description', 'image'],
+        include: {all: true},
+      });
+    } catch (error) {
+      throw new HttpException(error.message, error.status);
+    }
+  }
+
+  async findCourses(id: string) {
+    try {
+      console.log("object");
+      return await this.moduleRepository.findAll({ where: {course_id: id},
         include: {all: true},
       });
     } catch (error) {
@@ -51,7 +64,7 @@ export class ModulesService {
   async findOne(id: string) {
     try {
       const data = await this.moduleRepository.findByPk(id, {
-        attributes: ['id','course_id', 'title', 'description', 'image'],
+        attributes: ['id','course_id', 'title', 'description'],
         include: { all: true },
       });
       if (!data) {
@@ -62,6 +75,7 @@ export class ModulesService {
       throw new HttpException(error.message, error.status);
     }
   }
+
 
   async update(id: string, updateModuleDto: UpdateModuleDto, file: any) {
     try {

@@ -9,6 +9,6 @@ import { StatisticsController } from './statistics.controller';
     SequelizeModule.forFeature([Statistic])
   ],
   controllers: [StatisticsController],
-  providers: [StatisticsService]
+  providers: [StatisticsService],
 })
 export class StatisticsModule {}
