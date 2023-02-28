@@ -1,3 +1,4 @@
+import { CourseService } from './../course/course.service';
 import { LessonService } from './../lesson/lesson.service';
 import { ModulesService } from './../modules/modules.service';
 import { HttpException, Injectable, InternalServerErrorException, HttpStatus } from '@nestjs/common';
@@ -10,14 +11,44 @@ import { Viewed } from './entities/viewed.entity';
 export class ViewedService {
   constructor(
     @InjectModel(Viewed) private viewedRepository: typeof Viewed,
-    private readonly moduleService: ModulesService,
-    private readonly lessonService: LessonService
+    private readonly courseService: CourseService
   ) {}
 
   async create(createViewedDto: CreateViewedDto) {
     try {
-      await this.viewedRepository.create(createViewedDto);
+      const data = await this.viewedRepository.findOne({where: {student_id: createViewedDto.student_id, course_id: createViewedDto.course_id}})
+      if(!data){
+        const data1 = await this.viewedRepository.create({
+          student_id: createViewedDto.student_id,
+          course_id: createViewedDto.course_id,
+          modules: [createViewedDto.module_id],
+          lessons: [createViewedDto.lesson_id]
+        });
+      } else {
+        
+        let modules = data.dataValues.modules
+        let lessons = data.dataValues.lessons
+        if(!data.modules.includes(createViewedDto.module_id)){
+          modules = [...modules, createViewedDto.module_id]
+          console.log(modules);
+        }
+        if(!data.lessons.includes(createViewedDto.lesson_id)){
+          lessons = [...lessons, createViewedDto.lesson_id]
+          console.log(lessons);
+        }
 
+        console.log("modules: ", modules);
+        console.log("lessons: ", lessons);
+        await this.viewedRepository.update({
+          modules: modules,
+          lessons: lessons
+        }, {where: {id: data.id}})
+        return {
+          statusCode: 200,
+          message: "Updated"
+        }
+      }
+   
       return {
         statusCode: 201,
         message: 'Created',
@@ -30,7 +61,7 @@ export class ViewedService {
 
   async findAll() {
     try {
-      return await this.viewedRepository.findAll({ attributes: ['id', 'student_id', 'course_id', 'module_id', 'lesson_id', 'viewed'] });
+      return await this.viewedRepository.findAll({ attributes: ['id', 'student_id', 'course_id', 'modules', 'lessons'] });
     } catch (error) {
       console.log(error);
       throw new HttpException(error.message, error.status);
@@ -39,54 +70,19 @@ export class ViewedService {
 
   async findOne(id: string) {
     try {
-      return await this.viewedRepository.findByPk(id, {
-        attributes: ['id', 'student_id', 'course_id', 'module_id', 'lesson_id', 'viewed']
-      });
+      const data = await this.viewedRepository.findOne({where: {id: id}});
+      console.log(data.dataValues);
+      const lessons = await this.courseService.findOne(data.course_id)
+      console.log(lessons.lessons);
+      console.log(data.lessons);
+      const viewed = (100 / lessons.lessons) * data.lessons.length
+      return viewed.toFixed()
     } catch (error) {
       console.log(error);
       throw new HttpException(error.message, error.status);
     }
   }
 
-  async findLevelCourses(id: string) {
-    try {
-      const data = await this.moduleService.findCourses(id)
-      if(!data) throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
-      console.log(data);
-      const levels = data.length
-      let courses = 0
-      let lesson = []
-      for(const element of data){
-        lesson = await this.lessonService.findModules(element.dataValues.id)
-        console.log(lesson);
-        courses += lesson.length
-        // lesson = []
-      }
-
-      return {
-        levels: levels,
-        courses: courses
-      }
-    } catch (error) {
-      throw new HttpException(error.message, error.status)
-    }
-  }
-
-  async update(id: string, updateViewedDto: UpdateViewedDto) {
-    try {
-      await this.viewedRepository.update(updateViewedDto, {
-        where: { id: id },
-      });
-
-      return {
-        statusCode: 200,
-        message: "Updated"
-      }
-    } catch (error) {
-      console.log(error);
-      throw new HttpException(error.message, error.status);
-    }
-  }
 
   async remove(id: string) {
     try {

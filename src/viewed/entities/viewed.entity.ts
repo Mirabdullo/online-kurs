@@ -43,13 +43,13 @@ export class Viewed extends Model<Viewed> {
   @Column({
     type: DataType.ARRAY(DataType.STRING),
   })
-  module_id: string;
+  modules: Array<string>;
 
   @ApiProperty({ example: '[173ef952-79bb-489d-9cfc-62db0d8114b4]', description: 'Korilgan darslar royxati' })
   @ForeignKey(() => Lesson)
   @Column({
     type: DataType.ARRAY(DataType.STRING),
   })
-  lesson_id: string;
+  lessons: Array<string>;
 
 }

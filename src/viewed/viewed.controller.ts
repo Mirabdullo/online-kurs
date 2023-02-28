@@ -32,15 +32,6 @@ export class ViewedController {
     return this.viewedService.findOne(id);
   }
 
-  @Get('viewed/:id')
-  findViewed(@Param('id') id: string){
-    return this.viewedService.findLevelCourses(id)
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateViewedDto: UpdateViewedDto) {
-    return this.viewedService.update(id, updateViewedDto);
-  }
 
   @Delete(':id')
   remove(@Param('id') id: string) {

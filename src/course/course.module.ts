@@ -13,6 +13,7 @@ import { Statistic } from '../statistics/entities/statistic.entity';
     FilesModule
   ],
   controllers: [CourseController],
-  providers: [CourseService]
+  providers: [CourseService],
+  exports: [CourseService]
 })
 export class CourseModule {}
