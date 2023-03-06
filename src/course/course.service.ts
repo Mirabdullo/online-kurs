@@ -20,29 +20,27 @@ export class CourseService {
   async create(createCourseDto: CreateCourseDto, files: any) {
     try {
       const file = [files.image[0], files.logo[0]]
-      console.log(file);
-      // createCourseDto.price = Number(createCourseDto.price)
+      createCourseDto.price = Number(createCourseDto.price)
       
-      // if (file) {
-      //   const fileName = await this.fileService.createFile(file);
-      //   // console.log(fileName);
-      //   await this.courseRepository.create({
-      //     ...createCourseDto,
-      //     image: fileName[0].split('.')[1] !== 'svg' ? fileName[0] : fileName[1],
-      //     logo: fileName[0].split('.')[1] === 'svg' ? fileName[0] : fileName[1],
-      //   });
-      //   return {
-      //     statusCode: 201,
-      //     message: 'Created',
-      //   };
-      // } else {
-      //   await this.courseRepository.create(createCourseDto);
+      if (file) {
+        const fileName = await this.fileService.createFile(file);
+        await this.courseRepository.create({
+          ...createCourseDto,
+          image: fileName[0].split('.')[1] !== 'svg' ? fileName[0] : fileName[1],
+          logo: fileName[0].split('.')[1] === 'svg' ? fileName[0] : fileName[1],
+        });
+        return {
+          statusCode: 201,
+          message: 'Created',
+        };
+      } else {
+        await this.courseRepository.create(createCourseDto);
 
-      //   return {
-      //     statusCode: 201,
-      //     message: 'Created',
-      //   };
-      // }
+        return {
+          statusCode: 201,
+          message: 'Created',
+        };
+      }
     } catch (error) {
       console.log(error);
       throw new HttpException(error.message, error.status);
@@ -71,13 +69,14 @@ export class CourseService {
     }
   }
 
-  async update(id: string, updateCourseDto: UpdateCourseDto, file: any) {
+  async update(id: string, updateCourseDto: UpdateCourseDto, files: any) {
     try {
       const course = await this.courseRepository.findByPk(id);
       if (!course)
         throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND);
 
-      if (!file) {
+      if (!files) {
+        const file = [files.image[0], files.logo[0]]
         await this.fileService.removeFile(course.image);
         const fileName = await this.fileService.createFile(file);
         if(fileName.length === 1 && fileName[0].split('.')[1] === 'svg'){
