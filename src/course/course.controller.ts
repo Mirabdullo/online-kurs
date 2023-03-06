@@ -10,7 +10,7 @@ import {
   UseInterceptors,
   UploadedFiles,
 } from '@nestjs/common';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor, FileFieldsInterceptor } from '@nestjs/platform-express';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CourseService } from './course.service';
 import { CreateCourseDto } from './dto/create-course.dto';
@@ -25,9 +25,12 @@ export class CourseController {
   @ApiOperation({ summary: 'Course qoshish' })
   @ApiResponse({ status: 201, type: Course })
   @Post()
-  @UseInterceptors(FilesInterceptor('file'))
-  create(@Body() createCourseDto: CreateCourseDto, @UploadedFiles() file: any) {
-    return this.courseService.create(createCourseDto, file);
+  @UseInterceptors(FileFieldsInterceptor([
+    { name: 'image', maxCount: 1 },
+    { name: 'logo', maxCount: 1 },
+  ]))
+  create(@Body() createCourseDto: CreateCourseDto, @UploadedFiles()  files: { image?: Express.Multer.File[], logo?: Express.Multer.File[] },) {
+    return this.courseService.create(createCourseDto, files);
   }
 
   @ApiOperation({ summary: 'Courselar royxati' })

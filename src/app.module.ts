@@ -88,6 +88,8 @@ import { Statistic } from './statistics/entities/statistic.entity';
 
     StatisticsModule,
 
+
+
   ],
   controllers: [],
   providers: [],

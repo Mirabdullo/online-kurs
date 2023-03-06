@@ -8,6 +8,7 @@ import {
 import * as fs from 'fs';
 import * as path from 'path';
 import * as uuid from 'uuid';
+import { extname } from 'path';
 
 @Injectable()
 export class FilesService {
@@ -17,14 +18,8 @@ export class FilesService {
             let fileNames = []
             file.forEach(item => {
                 if (item.mimetype === 'image/jpeg' || item.mimetype === 'image/png' || item.mimetype === 'image/svg+xml') {
-                    let fileName: string;
-                    if (item.mimetype === 'image/jpeg') {
-                      fileName = uuid.v4() + '.jpeg';
-                    } else if (item.mimetype === 'image/png') {
-                      fileName = uuid.v4() + '.png';
-                    } else {
-                      fileName = uuid.v4() + '.svg';
-                    }
+                    let fileName = uuid.v4() +  extname(item.originalname);
+              
                     const filePath = path.resolve(__dirname, '..', 'static', 'images');
                     if (!fs.existsSync(filePath)) {
                       fs.mkdirSync(filePath, { recursive: true });
@@ -32,7 +27,7 @@ export class FilesService {
                     fs.writeFileSync(path.join(filePath, fileName), item.buffer);
                     fileNames.push(fileName)
                 } else if (item.mimetype === 'video/mp4') {
-                    const fileName = uuid.v4() + '.mp4';
+                    const fileName = uuid.v4() +  extname(item.originalname);
                     const filePath = path.resolve(__dirname, '..', 'static', 'videos');
                     if (!fs.existsSync(filePath)) {
                       fs.mkdirSync(filePath, { recursive: true });
@@ -48,14 +43,7 @@ export class FilesService {
             return fileNames
         } else {
             if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype === 'image/svg+xml') {
-                let fileName: string;
-                if (file.mimetype === 'image/jpeg') {
-                  fileName = uuid.v4() + '.jpeg';
-                } else if (file.mimetype === 'image/png') {
-                  fileName = uuid.v4() + '.png';
-                } else {
-                  fileName = uuid.v4() + '.svg';
-                }
+              let fileName = uuid.v4() +  extname(file.originalname);
                 const filePath = path.resolve(__dirname, '..', 'static', 'images');
                 if (!fs.existsSync(filePath)) {
                   fs.mkdirSync(filePath, { recursive: true });
@@ -63,7 +51,7 @@ export class FilesService {
                 fs.writeFileSync(path.join(filePath, fileName), file.buffer);
                 return fileName;
               } else if (file.mimetype === 'video/mp4') {
-                const fileName = uuid.v4() + '.mp4';
+                let fileName = uuid.v4() +  extname(file.originalname);
                 const filePath = path.resolve(__dirname, '..', 'static', 'videos');
                 if (!fs.existsSync(filePath)) {
                   fs.mkdirSync(filePath, { recursive: true });

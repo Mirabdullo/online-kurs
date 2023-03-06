@@ -1,3 +1,4 @@
+import { ConfigModule } from '@nestjs/config';
 import { Module } from '@nestjs/common';
 import { CourseService } from './course.service';
 import { CourseController } from './course.controller';
@@ -6,11 +7,14 @@ import { Course } from './entities/course.entity';
 import { FilesModule } from '../uploads/files.module';
 import { Category } from '../category/entities/category.entity';
 import { Statistic } from '../statistics/entities/statistic.entity';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
     SequelizeModule.forFeature([Course, Category, Statistic]),
-    FilesModule
+    FilesModule,
+    ConfigModule,
+
   ],
   controllers: [CourseController],
   providers: [CourseService],

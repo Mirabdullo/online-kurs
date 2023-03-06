@@ -28,17 +28,14 @@ export class ViewedService {
         
         let modules = data.dataValues.modules
         let lessons = data.dataValues.lessons
+
         if(!data.modules.includes(createViewedDto.module_id)){
           modules = [...modules, createViewedDto.module_id]
-          console.log(modules);
         }
         if(!data.lessons.includes(createViewedDto.lesson_id)){
           lessons = [...lessons, createViewedDto.lesson_id]
-          console.log(lessons);
         }
 
-        console.log("modules: ", modules);
-        console.log("lessons: ", lessons);
         await this.viewedRepository.update({
           modules: modules,
           lessons: lessons
@@ -76,7 +73,10 @@ export class ViewedService {
       console.log(lessons.lessons);
       console.log(data.lessons);
       const viewed = (100 / lessons.lessons) * data.lessons.length
-      return viewed.toFixed()
+      return {
+        sale: viewed.toFixed(),
+        data: data
+      }
     } catch (error) {
       console.log(error);
       throw new HttpException(error.message, error.status);

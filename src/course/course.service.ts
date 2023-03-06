@@ -17,30 +17,32 @@ export class CourseService {
     @InjectModel(Course) private courseRepository: typeof Course,
     private readonly fileService: FilesService,
   ) {}
-  async create(createCourseDto: CreateCourseDto, file: any) {
+  async create(createCourseDto: CreateCourseDto, files: any) {
     try {
-      createCourseDto.price = Number(createCourseDto.price)
+      const file = [files.image[0], files.logo[0]]
+      console.log(file);
+      // createCourseDto.price = Number(createCourseDto.price)
       
-      if (file) {
-        const fileName = await this.fileService.createFile(file);
-        console.log(fileName);
-        await this.courseRepository.create({
-          ...createCourseDto,
-          image: fileName[0].split('.')[1] !== 'svg' ? fileName[0] : fileName[1],
-          logo: fileName[0].split('.')[1] === 'svg' ? fileName[0] : fileName[1],
-        });
-        return {
-          statusCode: 201,
-          message: 'Created',
-        };
-      } else {
-        await this.courseRepository.create(createCourseDto);
+      // if (file) {
+      //   const fileName = await this.fileService.createFile(file);
+      //   // console.log(fileName);
+      //   await this.courseRepository.create({
+      //     ...createCourseDto,
+      //     image: fileName[0].split('.')[1] !== 'svg' ? fileName[0] : fileName[1],
+      //     logo: fileName[0].split('.')[1] === 'svg' ? fileName[0] : fileName[1],
+      //   });
+      //   return {
+      //     statusCode: 201,
+      //     message: 'Created',
+      //   };
+      // } else {
+      //   await this.courseRepository.create(createCourseDto);
 
-        return {
-          statusCode: 201,
-          message: 'Created',
-        };
-      }
+      //   return {
+      //     statusCode: 201,
+      //     message: 'Created',
+      //   };
+      // }
     } catch (error) {
       console.log(error);
       throw new HttpException(error.message, error.status);

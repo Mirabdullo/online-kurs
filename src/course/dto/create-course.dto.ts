@@ -36,7 +36,7 @@ export class CreateCourseDto {
   description: string;
 
 
-  @ApiProperty({ example: 'image.jpeg', description: 'Course foni uchun rasm' })
+  @ApiProperty({ example: '', description: 'Course narxi' })
   @IsOptional()
   @IsString()
   price: number;

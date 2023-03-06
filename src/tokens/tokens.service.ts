@@ -7,17 +7,8 @@ export class TokensService {
   constructor(private readonly jwtService: JwtService) {}
 
   async getTokens(
-    id: string,
-    email: string,
-    is_creator?: boolean,
-    is_active?: boolean,
+    jwtPayload: object
   ) {
-    const jwtPayload = {
-      sub: id,
-      email: email,
-      is_creator: is_creator,
-      is_active: is_active,
-    };
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(jwtPayload, {
         secret: process.env.ACCESS_TOKEN_KEY,

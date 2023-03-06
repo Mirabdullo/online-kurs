@@ -39,11 +39,13 @@ export class AdminsService {
         password: hashedPassword,
       });
 
-      const tokens = await this.tokenService.getTokens(
-        admin.id,
-        admin.email,
-        admin.is_active,
-      );
+      const payload = {
+        id: admin.id,
+        email: admin.email,
+        is_active: admin.is_active,
+      };
+
+      const tokens = await this.tokenService.getTokens(payload);
 
       await this.tokenService.updateRefreshTokenHash(
         admin.id,
@@ -79,11 +81,13 @@ export class AdminsService {
       const passwordMatches = await bcrypt.compare(password, admin.password);
       if (!passwordMatches) throw new BadRequestException("password noto'g'ri");
 
-      const tokens = await this.tokenService.getTokens(
-        admin.id,
-        admin.email,
-        admin.is_active,
-      );
+      const payload = {
+        id: admin.id,
+        email: admin.email,
+        is_active: admin.is_active,
+      };
+
+      const tokens = await this.tokenService.getTokens(payload);
 
       await this.tokenService.updateRefreshTokenHash(
         admin.id,
@@ -155,8 +159,8 @@ export class AdminsService {
 
       return {
         statusCode: 200,
-        message: "Updated"
-      }
+        message: 'Updated',
+      };
     } catch (error) {
       console.log(error);
       throw new HttpException(error.message, error.status);

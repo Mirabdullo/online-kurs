@@ -50,6 +50,6 @@ export class Viewed extends Model<Viewed> {
   @Column({
     type: DataType.ARRAY(DataType.STRING),
   })
-  lessons: Array<string>;
+  lessons: string[];
 
 }

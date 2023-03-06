@@ -19,6 +19,7 @@ async function start() {
   app.enableCors()
 
   const swagger = new DocumentBuilder()
+  .addBearerAuth()
   .setTitle('OLP')
   .setDescription('Rest Api')
   .setVersion('1.0.0')

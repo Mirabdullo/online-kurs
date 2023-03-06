@@ -7,6 +7,8 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
+import * as nodemailer from 'nodemailer';
+import * as sgTransport from 'nodemailer-sendgrid-transport';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateStudentDto } from './dto/create-student.dto';
@@ -46,10 +48,13 @@ export class StudentsService {
         password: hashedPassword,
       });
 
+      const payload = {
+        id: newStudent.id,
+        email: newStudent.email,
+        is_active: newStudent.is_active,
+      }
       const tokens = await this.tokenService.getTokens(
-        newStudent.id,
-        newStudent.email,
-        newStudent.is_active,
+        payload
       );
 
       await this.tokenService.updateRefreshTokenHash(
@@ -79,15 +84,18 @@ export class StudentsService {
         where: { email: email },
       });
 
-      if (!email) throw new BadRequestException("Email not'g'ri");
+      if (!student) throw new HttpException("Email not'g'ri", HttpStatus.BAD_REQUEST);
 
       const passwordMatches = await bcrypt.compare(password, student.password);
       if (!passwordMatches) throw new BadRequestException("Password noto'g'ri");
 
+      const payload = {
+        id: student.id,
+        email: student.email,
+        is_active: student.is_active,
+      }
       const tokens = await this.tokenService.getTokens(
-        student.id,
-        student.email,
-        student.is_active,
+        payload
       );
 
       await this.tokenService.updateRefreshTokenHash(
@@ -132,8 +140,9 @@ export class StudentsService {
   // All students
   async findAll() {
     try {
+     
       return await this.studentRepository.findAll({
-        attributes: ['id','first_name', 'last_name', 'email'],
+        // attributes: ['id','first_name', 'last_name', 'email'],
         include: {all: true}
       });
     } catch (error) {
@@ -193,6 +202,8 @@ export class StudentsService {
       console.log(error);
       throw new HttpException(error.message, error.status);
     }
+
+
   }
 
 
@@ -208,7 +219,7 @@ export class StudentsService {
       }
       const data = await this.jwtService.verify(token['token'],{secret: process.env.REFRESH_TOKEN_KEY})
       console.log(data);
-      const student = await this.studentRepository.findByPk(data.sub)
+      const student = await this.studentRepository.findByPk(data.id)
       console.log(student);
       if(!student){
         throw new HttpException("Unauthorized", HttpStatus.NOT_FOUND)
@@ -220,10 +231,13 @@ export class StudentsService {
         throw new HttpException("Ruxsat etilmagan foydalanuvchi", HttpStatus.BAD_GATEWAY)
       }
 
+      const payload = {
+        id: student.id,
+        email: student.email,
+        is_active: student.is_active,
+      }
       const tokens = await this.tokenService.getTokens(
-        student.id,
-        student.email,
-        student.is_active,
+        payload
       );
 
       student.refresh_token = tokens.refresh_token
@@ -247,13 +261,6 @@ export class StudentsService {
       throw new HttpException(error.message, error.status)
     }
   }
-
-
-
-
-
-
-
 
 
 

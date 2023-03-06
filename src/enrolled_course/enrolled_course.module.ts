@@ -1,3 +1,4 @@
+import { JwtModule } from '@nestjs/jwt';
 import { Module } from '@nestjs/common';
 import { EnrolledCourseService } from './enrolled_course.service';
 import { EnrolledCourseController } from './enrolled_course.controller';
@@ -8,7 +9,8 @@ import { Course } from '../course/entities/course.entity';
 
 @Module({
   imports: [
-    SequelizeModule.forFeature([EnrolledCourse, Student, Course])
+    SequelizeModule.forFeature([EnrolledCourse, Student, Course]),
+    JwtModule
   ],
   controllers: [EnrolledCourseController],
   providers: [EnrolledCourseService]
