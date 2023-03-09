@@ -1,3 +1,4 @@
+import { TokensModule } from './../tokens/tokens.module';
 import { JwtService, JwtModule } from '@nestjs/jwt';
 import {
   HttpException,
@@ -21,40 +22,51 @@ export class LikedCourseService {
   ) {}
   async create(createLikedCourseDto: CreateLikedCourseDto, req: Request) {
     try {
-      let token = ''
-      for(const item of req.rawHeaders){
-        if(item.includes('Bearer')){
-          token = item.split(' ')[1]
-        }
-      }
+      let token = req.headers.authorization
       if(!token) {
         throw new UnauthorizedException("Token topilmadi")
       }
+      token = token.split(' ')[1]
       const student = this.jwtService.verify(token,{secret: process.env.ACCESS_TOKEN_KEY})
-      if(!student) throw new UnauthorizedException("Ruxsat etilmagan")
       
-      await this.likedRepository.create(createLikedCourseDto);
+      await this.likedRepository.create({
+        student_id: student.id,
+        course_id: createLikedCourseDto.course_id
+      })
+      
       return {
         statusCode: 201,
         message: 'Created',
       };
     } catch (error) {
+      if (error.message.includes('invalid signature')) {
+        throw new HttpException('Invalid token', HttpStatus.UNAUTHORIZED);
+      } else if (error.message.includes('jwt expired')) {
+        throw new HttpException('Jwt expired', HttpStatus.UNAUTHORIZED);
+      }
       throw new HttpException(error.message, error.status);
     }
   }
 
 
-  async findOne(id: string) {
+  async findOne(req: Request) {
     try {
-      const data = await this.likedRepository.findByPk(id, {
-        attributes: ['student_id', 'course_id'],
-        include:{all: true}
-      });
-      if (!data) {
-        throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+      let token = req.headers.authorization
+      if(!token){
+        throw new UnauthorizedException("Token topilmadi")
       }
+      const student = await this.jwtService.verify(token, {secret: process.env.ACCESS_TOKEN_KEY})
+
+      const data = await this.likedRepository.findAll({ where: {student_id: student.id}, include:{all: true}
+      });
+
       return data;
     } catch (error) {
+      if (error.message.includes('invalid signature')) {
+        throw new HttpException('Invalid token', HttpStatus.UNAUTHORIZED);
+      } else if (error.message.includes('jwt expired')) {
+        throw new HttpException('Jwt expired', HttpStatus.UNAUTHORIZED);
+      }
       throw new HttpException(error.message, error.status);
     }
   }

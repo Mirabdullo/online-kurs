@@ -46,14 +46,6 @@ export class Admin extends Model<Admin> {
   })
   password: string;
 
-  @ApiProperty({
-    example: '039q4uriojf03fh03-rih4qefjq9rf-3pojedfq-weod-p3rj',
-    description: 'Adminning hashlangan refresh tokeni',
-  })
-  @Column({
-    type: DataType.STRING,
-  })
-  refresh_token: string;
 
   @ApiProperty({
     example: 'true / false',
@@ -65,13 +57,4 @@ export class Admin extends Model<Admin> {
   })
   is_active: boolean;
 
-  @ApiProperty({
-    example: 'true / false',
-    description: "Admin creator yoki yo'qligi",
-  })
-  @Column({
-    type: DataType.BOOLEAN,
-    defaultValue: false,
-  })
-  is_creator: boolean;
 }

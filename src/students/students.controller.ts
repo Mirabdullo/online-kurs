@@ -83,16 +83,4 @@ export class StudentsController {
     return this.studentsService.update(req, updateStudentDto, file);
   }
 
-
-
-
-  @ApiOperation({ summary: 'Student uchun signup qilishi' })
-  @ApiResponse({ status: 201, type: Student })
-  @Post('refresh-token')
-  refreshToken(
-    @Body() token: string,
-    @Res({ passthrough: true }) res: Response,
-  ) {
-    return this.studentsService.refreshToken(token, res);
-  }
 }

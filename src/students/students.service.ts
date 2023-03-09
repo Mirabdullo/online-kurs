@@ -24,7 +24,7 @@ export class StudentsService {
     private readonly tokenService: TokensService,
     private readonly jwtService: JwtService,
     private readonly fileService: FilesService
-  ) {}
+  ) { }
 
   // Registrate studen ////////
   async signup(
@@ -40,7 +40,7 @@ export class StudentsService {
         throw new BadRequestException('Bunday foydalanuvchi mavjud');
       }
       let upload_image: string = ""
-      if(file){
+      if (file) {
         upload_image = await this.fileService.createFile(file)
       }
       const hashedPassword = await bcrypt.hash(createStudentDto.password, 7);
@@ -61,17 +61,10 @@ export class StudentsService {
         payload
       );
 
-      await this.tokenService.updateRefreshTokenHash(
-        newStudent.id,
-        tokens.refresh_token,
-        this.studentRepository,
-      );
 
-      await this.tokenService.writeCookie(tokens.refresh_token, res);
       return {
         id: newStudent.id,
         access_token: tokens.access_token,
-        refresh_token: tokens.refresh_token,
       };
     } catch (error) {
       console.log(error);
@@ -95,7 +88,7 @@ export class StudentsService {
 
       await this.studentRepository.update({
         is_active: true
-      }, {where: {id: data.id}})
+      }, { where: { id: data.id } })
 
       const student = await this.studentRepository.findByPk(data.id)
 
@@ -109,17 +102,8 @@ export class StudentsService {
         payload
       );
 
-      await this.tokenService.updateRefreshTokenHash(
-        student.id,
-        tokens.refresh_token,
-        this.studentRepository,
-      );
-
-      await this.tokenService.writeCookie(tokens.refresh_token, res);
-
       return {
         access_token: tokens.access_token,
-        refresh_token: tokens.refresh_token,
       };
     } catch (error) {
       console.log(error);
@@ -131,11 +115,11 @@ export class StudentsService {
   async logout(req: Request) {
     try {
       let token = req.headers.authorization
-      if(!token){
+      if (!token) {
         throw new UnauthorizedException("Not found token")
       }
       token = token.split(' ')[1]
-      const student = this.jwtService.verify(token,{secret: process.env.ACCESS_TOKEN_KEY})
+      const student = this.jwtService.verify(token, { secret: process.env.ACCESS_TOKEN_KEY })
 
       return await this.studentRepository.update(
         {
@@ -145,11 +129,11 @@ export class StudentsService {
       );
     } catch (error) {
       console.log(error);
-      if(error.message.includes("invalid signature")){
+      if (error.message.includes("invalid signature")) {
         throw new HttpException("Invalid token", HttpStatus.UNAUTHORIZED)
-        } else if(error.message.includes('jwt expired')){
-          throw new HttpException("Jwt expired", HttpStatus.UNAUTHORIZED)
-        }
+      } else if (error.message.includes('jwt expired')) {
+        throw new HttpException("Jwt expired", HttpStatus.UNAUTHORIZED)
+      }
       throw new HttpException(error.message, error.status);
     }
   }
@@ -157,9 +141,9 @@ export class StudentsService {
   // All students
   async findAll() {
     try {
-     
+
       return await this.studentRepository.findAll({
-        include: {all: true}
+        include: { all: true }
       });
     } catch (error) {
       console.log(error);
@@ -167,21 +151,21 @@ export class StudentsService {
     }
   }
 
-  async findOne(req: Request){
+  async findOne(req: Request) {
     try {
       let token = req.headers.authorization
-      if(!token){
+      if (!token) {
         throw new UnauthorizedException("Not found token")
       }
       token = token.split(' ')[1]
-      const student = this.jwtService.verify(token,{secret: process.env.ACCESS_TOKEN_KEY})
+      const student = this.jwtService.verify(token, { secret: process.env.ACCESS_TOKEN_KEY })
       return await this.studentRepository.findByPk(student.id)
 
     } catch (error) {
       console.log(error);
-      if(error.message.includes("invalid signature")){
-      throw new HttpException("Invalid token", HttpStatus.UNAUTHORIZED)
-      } else if(error.message.includes('jwt expired')){
+      if (error.message.includes("invalid signature")) {
+        throw new HttpException("Invalid token", HttpStatus.UNAUTHORIZED)
+      } else if (error.message.includes('jwt expired')) {
         throw new HttpException("Jwt expired", HttpStatus.UNAUTHORIZED)
       }
       throw new HttpException(error.message, error.status)
@@ -193,14 +177,14 @@ export class StudentsService {
   async update(req: Request, updateStudentDto: UpdateStudentDto, file: any) {
     try {
       let token = req.headers.authorization
-      if(!token){
+      if (!token) {
         throw new UnauthorizedException("Not found token")
       }
       token = token.split(' ')[1]
-      const student = this.jwtService.verify(token,{secret: process.env.ACCESS_TOKEN_KEY})
-      
+      const student = this.jwtService.verify(token, { secret: process.env.ACCESS_TOKEN_KEY })
+
       let upload_image: string = ""
-      if(file){
+      if (file) {
         upload_image = await this.fileService.createFile(file)
       }
 
@@ -216,69 +200,14 @@ export class StudentsService {
       }
     } catch (error) {
       console.log(error);
-      if(error.message.includes("invalid signature")){
+      if (error.message.includes("invalid signature")) {
         throw new HttpException("Invalid token", HttpStatus.UNAUTHORIZED)
-        } else if(error.message.includes('jwt expired')){
-          throw new HttpException("Jwt expired", HttpStatus.UNAUTHORIZED)
-        }
+      } else if (error.message.includes('jwt expired')) {
+        throw new HttpException("Jwt expired", HttpStatus.UNAUTHORIZED)
+      }
       throw new HttpException(error.message, error.status);
     }
   }
-
-
-
-
-
-  async refreshToken(token: string, res: Response){
-    try {
-      if(!token){
-        throw new HttpException("Token Not Found", HttpStatus.NOT_FOUND)
-      }
-      const data = await this.jwtService.verify(token['token'],{secret: process.env.REFRESH_TOKEN_KEY})
-      console.log(data);
-      const student = await this.studentRepository.findByPk(data.id)
-      console.log(student);
-      if(!student){
-        throw new HttpException("Unauthorized", HttpStatus.NOT_FOUND)
-      }
-      console.log(student.refresh_token);
-      const matchesToken = await bcrypt.compare(token['token'], student.refresh_token)
-      console.log(matchesToken);
-      if(!matchesToken){
-        throw new HttpException("Ruxsat etilmagan foydalanuvchi", HttpStatus.BAD_GATEWAY)
-      }
-
-      const payload = {
-        id: student.id,
-        email: student.email,
-        is_active: student.is_active,
-      }
-      const tokens = await this.tokenService.getTokens(
-        payload
-      );
-
-      student.refresh_token = tokens.refresh_token
-      student.save()
-
-      await this.tokenService.updateRefreshTokenHash(
-        student.id,
-        tokens.refresh_token,
-        this.studentRepository,
-      );
-
-      await this.tokenService.writeCookie(tokens.refresh_token, res);
-
-      return {
-        access_token: tokens.access_token,
-        refresh_token: tokens.refresh_token,
-      };
-      
-    } catch (error) {
-      console.log(error);
-      throw new HttpException(error.message, error.status)
-    }
-  }
-
 
 
 }

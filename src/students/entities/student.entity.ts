@@ -59,15 +59,6 @@ export class Student extends Model<Student> {
 
 
   @ApiProperty({
-    example: '039q4uriojf03fh03-rih4qefjq9rf-3pojedfq-weod-p3rj',
-    description: 'Studentning hashlangan refresh tokeni',
-  })
-  @Column({
-    type: DataType.STRING,
-  })
-  refresh_token: string;
-
-  @ApiProperty({
     example: 'true / false',
     description: "Student ban yoki yo'qligi",
   })

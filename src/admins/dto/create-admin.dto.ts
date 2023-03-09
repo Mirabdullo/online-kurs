@@ -31,10 +31,4 @@ export class CreateAdminDto {
     is_active: boolean
 
 
-    @ApiProperty({example: 'true / false', description: "Admin creator yoki yo'qligi"})
-    @IsOptional()
-    @IsBoolean()
-    is_creator: boolean
-
-
 }

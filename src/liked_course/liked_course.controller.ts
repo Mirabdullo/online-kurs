@@ -29,11 +29,11 @@ export class LikedCourseController {
   }
 
 
-  @ApiOperation({summary: "Course likes"})
+  @ApiOperation({summary: "Studentning yoqtirgan kurslari"})
   @ApiResponse({status: 201, type: LikedCourse})
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.likedCourseService.findOne(id);
+  @Get()
+  findOne(@Req() req: Request) {
+    return this.likedCourseService.findOne(req);
   }
 
 

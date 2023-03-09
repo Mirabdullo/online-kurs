@@ -4,7 +4,6 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
-  InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { TokensService } from '../tokens/tokens.service';
@@ -15,7 +14,6 @@ import * as bcrypt from 'bcryptjs';
 import { LoginDto } from './dto/login-auth.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { Request, Response } from 'express';
-import { where } from 'sequelize';
 
 @Injectable()
 export class AdminsService {
@@ -52,17 +50,10 @@ export class AdminsService {
 
       const tokens = await this.tokenService.getTokens(payload);
 
-      await this.tokenService.updateRefreshTokenHash(
-        admin.id,
-        tokens.refresh_token,
-        this.adminRepository,
-      );
-
-      await this.tokenService.writeCookie(tokens.refresh_token, res);
 
       return {
         access_token: tokens.access_token,
-        refresh_token: tokens.refresh_token,
+    
       };
     } catch (error) {
       console.log(error);
@@ -105,17 +96,8 @@ export class AdminsService {
 
       const tokens = await this.tokenService.getTokens(payload);
 
-      await this.tokenService.updateRefreshTokenHash(
-        admin.id,
-        tokens.refresh_token,
-        this.adminRepository,
-      );
-
-      await this.tokenService.writeCookie(tokens.refresh_token, res);
-
       return {
         access_token: tokens.access_token,
-        refresh_token: tokens.refresh_token,
       };
     } catch (error) {
       console.log(error);

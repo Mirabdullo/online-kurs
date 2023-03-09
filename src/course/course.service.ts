@@ -55,6 +55,16 @@ export class CourseService {
     }
   }
 
+  async findByCategory(id: string){
+    try {
+      const courses = await this.courseRepository.findAll({where: {category_id: id}})
+      return courses
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(error.message, error.status)
+    }
+  }
+
   async findOne(id: string) {
     try {
       return await this.courseRepository.findByPk(id, {
