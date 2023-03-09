@@ -30,17 +30,12 @@ export class EnrolledCourseController {
 
   @ApiOperation({summary: "Studentning enrolled kurslari royxati"})
   @ApiResponse({status: 200, type: [EnrolledCourse]})
+  @ApiBearerAuth()
   @Get()
   findAll(@Req() req: Request) {
     return this.enrolledCourseService.findAll(req);
   }
 
-  @ApiOperation({summary: "Id orqali bitta enrolled kurs"})
-  @ApiResponse({status: 200, type: EnrolledCourse})
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.enrolledCourseService.findOne(id);
-  }
 
   @ApiOperation({summary: "Id orqali bitta enrolled kursni o'chirish"})
   @ApiResponse({status: 200, type: EnrolledCourse})

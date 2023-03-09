@@ -14,58 +14,24 @@ import { extname } from 'path';
 export class FilesService {
   async createFile(file: any): Promise<any> {
     try {
-        if(isArray(file)){
-            let fileNames = []
-            file.forEach(item => {
-                if (item.mimetype === 'image/jpeg' || item.mimetype === 'image/png' || item.mimetype === 'image/svg+xml') {
-                    let fileName = uuid.v4() +  extname(item.originalname);
-              
-                    const filePath = path.resolve(__dirname, '..', 'static', 'images');
-                    if (!fs.existsSync(filePath)) {
-                      fs.mkdirSync(filePath, { recursive: true });
-                    }
-                    fs.writeFileSync(path.join(filePath, fileName), item.buffer);
-                    fileNames.push(fileName)
-                } else if (item.mimetype === 'video/mp4') {
-                    const fileName = uuid.v4() +  extname(item.originalname);
-                    const filePath = path.resolve(__dirname, '..', 'static', 'videos');
-                    if (!fs.existsSync(filePath)) {
-                      fs.mkdirSync(filePath, { recursive: true });
-                    }
-                    fs.writeFileSync(path.join(filePath, fileName), item.buffer);
-                    fileNames.push(fileName)
-                } else {
-                    throw new BadRequestException(
-                      'Xato fayl kiritildi! (.jpeg  .png .mp4 ) fayllar kiritilishi mumkin',
-                    );
-                }
-            });
-            return fileNames
-        } else {
-            if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype === 'image/svg+xml') {
-              let fileName = uuid.v4() +  extname(file.originalname);
-                const filePath = path.resolve(__dirname, '..', 'static', 'images');
-                if (!fs.existsSync(filePath)) {
-                  fs.mkdirSync(filePath, { recursive: true });
-                }
-                fs.writeFileSync(path.join(filePath, fileName), file.buffer);
-                return fileName;
-              } else if (file.mimetype === 'video/mp4') {
-                let fileName = uuid.v4() +  extname(file.originalname);
-                const filePath = path.resolve(__dirname, '..', 'static', 'videos');
-                if (!fs.existsSync(filePath)) {
-                  fs.mkdirSync(filePath, { recursive: true });
-                }
-                fs.writeFileSync(path.join(filePath, fileName), file.buffer);
-                return fileName;
-              } else {
-                throw new BadRequestException(
-                  'Xato fayl kiritildi! (.jpeg  .png .mp4 ) fayllar kiritilishi mumkin',
-                );
-              }
-    
+      if (
+        file.mimetype === 'image/jpeg' ||
+        file.mimetype === 'image/png' ||
+        file.mimetype === 'image/svg+xml' ||
+        file.mimetype === 'video/mp4'
+      ) {
+        let fileName = uuid.v4() + extname(file.originalname);
+        const filePath = path.resolve(__dirname, '..', 'static');
+        if (!fs.existsSync(filePath)) {
+          fs.mkdirSync(filePath, { recursive: true });
         }
-          
+        fs.writeFileSync(path.join(filePath, fileName), file.buffer);
+        return fileName;
+      } else {
+        throw new BadRequestException(
+          'Xato fayl kiritildi! (.jpeg  .png .mp4 .svg ) fayllar kiritilishi mumkin',
+        );
+      }
     } catch (error) {
       console.log(error);
       throw new HttpException(

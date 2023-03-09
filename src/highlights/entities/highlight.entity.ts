@@ -1,5 +1,6 @@
+import { Course } from './../../course/entities/course.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import { Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
 
 @Table({ tableName: 'highlight', timestamps: false })
 export class Highlight extends Model<Highlight> {
@@ -10,6 +11,14 @@ export class Highlight extends Model<Highlight> {
         primaryKey: true,
     })
     id: string;
+
+    @ApiProperty({ example: '173ef952-79bb-489d-9cfc-62db0d8114b4', description: 'Course id' })
+    @ForeignKey(() => Course)
+    @Column({
+        type: DataType.STRING,
+        allowNull: true,
+    })
+    course_id: string;
 
     @ApiProperty({ example: 'Guided study plans', description: 'Course highlights' })
     @Column({

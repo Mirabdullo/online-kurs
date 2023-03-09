@@ -3,14 +3,10 @@ import {
   Get,
   Post,
   Body,
-  Patch,
-  Param,
-  Delete,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Category } from './entities/category.entity';
 
 @ApiTags('Category')
@@ -30,25 +26,5 @@ export class CategoryController {
   findAll() {
     return this.categoryService.findAll();
   }
-  @ApiOperation({ summary: 'id orqali bitta category malumotlari' })
-  @ApiResponse({ status: 200, type: Category })
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.categoryService.findOne(id);
-  }
-  @ApiOperation({ summary: 'Categoryni ozgartirish' })
-  @ApiResponse({ status: 200, type: Category })
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateCategoryDto: UpdateCategoryDto,
-  ) {
-    return this.categoryService.update(id, updateCategoryDto);
-  }
-  @ApiOperation({ summary: 'Categoryni ochirish' })
-  @ApiResponse({ status: 200, type: Category })
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.categoryService.remove(id);
-  }
+
 }

@@ -34,9 +34,7 @@ export class HighlightsService {
 
   async findOne(id: string) {
     try {
-      console.log(typeof id);
-      const data = await this.highlightRepository.findByPk(id, {
-        attributes: ['id','title', "description"],
+      const data = await this.highlightRepository.findAll({ where: {course_id: id}
       });
       if (!data) {
         throw new HttpException('Not Found', HttpStatus.NOT_FOUND);

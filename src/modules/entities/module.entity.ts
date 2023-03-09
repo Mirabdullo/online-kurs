@@ -47,12 +47,6 @@ export class Modules extends Model<Modules> {
   })
   description: string;
 
-  @ApiProperty({ example: 'media', description: 'media nomi' })
-  @Column({
-    type: DataType.STRING,
-    allowNull: true,
-  })
-  image: string;
 
   @BelongsTo(() => Course)
   course: Course;

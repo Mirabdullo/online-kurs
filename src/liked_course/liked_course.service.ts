@@ -1,10 +1,13 @@
+import { JwtService, JwtModule } from '@nestjs/jwt';
 import {
   HttpException,
   HttpStatus,
   Injectable,
   InternalServerErrorException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { Request } from 'express';
 import { CreateLikedCourseDto } from './dto/create-liked_course.dto';
 import { UpdateLikedCourseDto } from './dto/update-liked_course.dto';
 import { LikedCourse } from './entities/liked_course.entity';
@@ -14,9 +17,22 @@ export class LikedCourseService {
   constructor(
     @InjectModel(LikedCourse)
     private likedRepository: typeof LikedCourse,
+    private jwtService: JwtService
   ) {}
-  async create(createLikedCourseDto: CreateLikedCourseDto) {
+  async create(createLikedCourseDto: CreateLikedCourseDto, req: Request) {
     try {
+      let token = ''
+      for(const item of req.rawHeaders){
+        if(item.includes('Bearer')){
+          token = item.split(' ')[1]
+        }
+      }
+      if(!token) {
+        throw new UnauthorizedException("Token topilmadi")
+      }
+      const student = this.jwtService.verify(token,{secret: process.env.ACCESS_TOKEN_KEY})
+      if(!student) throw new UnauthorizedException("Ruxsat etilmagan")
+      
       await this.likedRepository.create(createLikedCourseDto);
       return {
         statusCode: 201,
@@ -27,16 +43,6 @@ export class LikedCourseService {
     }
   }
 
-  async findAll() {
-    try {
-      return await this.likedRepository.findAll({
-        attributes: ['student_id', 'course_id'],
-        include: { all: true },
-      });
-    } catch (error) {
-      throw new HttpException(error.message, error.status);
-    }
-  }
 
   async findOne(id: string) {
     try {
@@ -53,24 +59,7 @@ export class LikedCourseService {
     }
   }
 
-  async update(id: string, updateLikedCourseDto: UpdateLikedCourseDto) {
-    try {
-      const enrolled = await this.likedRepository.findByPk(id);
-      if (!enrolled)
-        throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND);
 
-      await this.likedRepository.update(updateLikedCourseDto, {
-        where: { id: id },
-      });
-
-      return {
-        statusCode: 200,
-        message: "Updated"
-      }
-    } catch (error) {
-      throw new HttpException(error.message, error.status);
-    }
-  }
 
   async remove(id: string) {
     try {

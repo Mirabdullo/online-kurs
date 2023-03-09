@@ -1,14 +1,11 @@
-import { EnrolledCourse } from './../enrolled_course/entities/enrolled_course.entity';
+import { FilesService } from './../uploads/files.service';
 import {
   BadRequestException,
-  ForbiddenException,
   HttpException,
   HttpStatus,
   Injectable,
-  InternalServerErrorException,
+  UnauthorizedException,
 } from '@nestjs/common';
-import * as nodemailer from 'nodemailer';
-import * as sgTransport from 'nodemailer-sendgrid-transport';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateStudentDto } from './dto/create-student.dto';
@@ -25,14 +22,15 @@ export class StudentsService {
   constructor(
     @InjectModel(Student) private studentRepository: typeof Student,
     private readonly tokenService: TokensService,
-    private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
+    private readonly fileService: FilesService
   ) {}
 
   // Registrate studen ////////
   async signup(
     createStudentDto: CreateStudentDto,
     res: Response,
-    req: Request,
+    file: any
   ) {
     try {
       const student = await this.studentRepository.findOne({
@@ -41,17 +39,23 @@ export class StudentsService {
       if (student) {
         throw new BadRequestException('Bunday foydalanuvchi mavjud');
       }
+      let upload_image: string = ""
+      if(file){
+        upload_image = await this.fileService.createFile(file)
+      }
       const hashedPassword = await bcrypt.hash(createStudentDto.password, 7);
 
       const newStudent = await this.studentRepository.create({
         ...createStudentDto,
         password: hashedPassword,
+        image: upload_image
       });
 
       const payload = {
         id: newStudent.id,
         email: newStudent.email,
         is_active: newStudent.is_active,
+        role: "student"
       }
       const tokens = await this.tokenService.getTokens(
         payload
@@ -80,19 +84,26 @@ export class StudentsService {
     try {
       const { email, password } = loginDto;
 
-      const student = await this.studentRepository.findOne({
+      const data = await this.studentRepository.findOne({
         where: { email: email },
       });
 
-      if (!student) throw new HttpException("Email not'g'ri", HttpStatus.BAD_REQUEST);
+      if (!data) throw new HttpException("Email not'g'ri", HttpStatus.BAD_REQUEST);
 
-      const passwordMatches = await bcrypt.compare(password, student.password);
+      const passwordMatches = await bcrypt.compare(password, data.password);
       if (!passwordMatches) throw new BadRequestException("Password noto'g'ri");
+
+      await this.studentRepository.update({
+        is_active: true
+      }, {where: {id: data.id}})
+
+      const student = await this.studentRepository.findByPk(data.id)
 
       const payload = {
         id: student.id,
         email: student.email,
         is_active: student.is_active,
+        role: "student"
       }
       const tokens = await this.tokenService.getTokens(
         payload
@@ -117,22 +128,28 @@ export class StudentsService {
   }
 
   // LOGOUT student / / / / // / / /
-  async logout(id: string, req: Request) {
+  async logout(req: Request) {
     try {
-      console.log(req);
-      const admin = await this.studentRepository.findByPk(id);
-      if (!admin) {
-        throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+      let token = req.headers.authorization
+      if(!token){
+        throw new UnauthorizedException("Not found token")
       }
+      token = token.split(' ')[1]
+      const student = this.jwtService.verify(token,{secret: process.env.ACCESS_TOKEN_KEY})
 
       return await this.studentRepository.update(
         {
           is_active: false,
         },
-        { where: { id: id } },
+        { where: { id: student.id } },
       );
     } catch (error) {
       console.log(error);
+      if(error.message.includes("invalid signature")){
+        throw new HttpException("Invalid token", HttpStatus.UNAUTHORIZED)
+        } else if(error.message.includes('jwt expired')){
+          throw new HttpException("Jwt expired", HttpStatus.UNAUTHORIZED)
+        }
       throw new HttpException(error.message, error.status);
     }
   }
@@ -142,7 +159,6 @@ export class StudentsService {
     try {
      
       return await this.studentRepository.findAll({
-        // attributes: ['id','first_name', 'last_name', 'email'],
         include: {all: true}
       });
     } catch (error) {
@@ -151,28 +167,48 @@ export class StudentsService {
     }
   }
 
-  // STUDENT findone
-  async findOne(id: string) {
+  async findOne(req: Request){
     try {
-      return await this.studentRepository.findByPk(id, {
-        paranoid: false,
-        attributes: ['id','first_name', 'last_name', 'email'],
-        include: {all: true}
-      });
+      let token = req.headers.authorization
+      if(!token){
+        throw new UnauthorizedException("Not found token")
+      }
+      token = token.split(' ')[1]
+      const student = this.jwtService.verify(token,{secret: process.env.ACCESS_TOKEN_KEY})
+      return await this.studentRepository.findByPk(student.id)
+
     } catch (error) {
       console.log(error);
-      throw new HttpException(error.message, error.status);
+      if(error.message.includes("invalid signature")){
+      throw new HttpException("Invalid token", HttpStatus.UNAUTHORIZED)
+      } else if(error.message.includes('jwt expired')){
+        throw new HttpException("Jwt expired", HttpStatus.UNAUTHORIZED)
+      }
+      throw new HttpException(error.message, error.status)
     }
   }
+
 
   // Update studen data
-  async update(id: string, updateStudentDto: UpdateStudentDto) {
+  async update(req: Request, updateStudentDto: UpdateStudentDto, file: any) {
     try {
-      const student = await this.studentRepository.findByPk(id);
-      if (!student) throw new BadRequestException("Student not found");
+      let token = req.headers.authorization
+      if(!token){
+        throw new UnauthorizedException("Not found token")
+      }
+      token = token.split(' ')[1]
+      const student = this.jwtService.verify(token,{secret: process.env.ACCESS_TOKEN_KEY})
+      
+      let upload_image: string = ""
+      if(file){
+        upload_image = await this.fileService.createFile(file)
+      }
 
-      await this.studentRepository.update(updateStudentDto, {
-        where: { id },
+      await this.studentRepository.update({
+        ...updateStudentDto,
+        image: upload_image
+      }, {
+        where: { id: student.id },
       });
       return {
         statusCode: 200,
@@ -180,33 +216,14 @@ export class StudentsService {
       }
     } catch (error) {
       console.log(error);
+      if(error.message.includes("invalid signature")){
+        throw new HttpException("Invalid token", HttpStatus.UNAUTHORIZED)
+        } else if(error.message.includes('jwt expired')){
+          throw new HttpException("Jwt expired", HttpStatus.UNAUTHORIZED)
+        }
       throw new HttpException(error.message, error.status);
     }
   }
-
-  // REMOVE student //////////
-  async remove(id: string) {
-    try {
-      const student = await this.studentRepository.findByPk(id);
-      if (!student) throw new BadRequestException("Ma'lumotlar topilmadi");
-
-      await this.studentRepository.destroy({
-        where: { id },
-      });
-
-      return {
-        status: 200,
-        message: 'Deleted',
-      };
-    } catch (error) {
-      console.log(error);
-      throw new HttpException(error.message, error.status);
-    }
-
-
-  }
-
-
 
 
 

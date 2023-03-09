@@ -11,7 +11,7 @@ import {
   UploadedFiles,
 } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor, FileFieldsInterceptor } from '@nestjs/platform-express';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiConsumes, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CourseService } from './course.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
@@ -29,6 +29,7 @@ export class CourseController {
     { name: 'image', maxCount: 1 },
     { name: 'logo', maxCount: 1 },
   ]))
+  @ApiConsumes('multipart/form-data')
   create(@Body() createCourseDto: CreateCourseDto, @UploadedFiles()  files: { image?: Express.Multer.File[], logo?: Express.Multer.File[] },) {
     return this.courseService.create(createCourseDto, files);
   }
@@ -51,6 +52,7 @@ export class CourseController {
   @ApiResponse({ status: 200, type: Course })
   @Patch(':id')
   @UseInterceptors(FilesInterceptor('file'))
+  @ApiConsumes('multipart/form-data')
   update(
     @Param('id') id: string,
     @Body() updateCourseDto: UpdateCourseDto,

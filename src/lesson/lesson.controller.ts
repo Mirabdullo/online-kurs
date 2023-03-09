@@ -13,7 +13,7 @@ import {
 import { LessonService } from './lesson.service';
 import { CreateLessonDto } from './dto/create-lesson.dto';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags, ApiConsumes } from '@nestjs/swagger';
 import { Lesson } from './entities/lesson.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 
@@ -25,6 +25,7 @@ export class LessonController {
   @ApiOperation({ summary: 'Lesson yaratish' })
   @ApiResponse({ status: 201, type: Lesson })
   @UseInterceptors(FileInterceptor('video'))
+  @ApiConsumes('multipart/form-data')
   @Post()
   create(@Body() createLessonDto: CreateLessonDto, @UploadedFile() file: any) {
     return this.lessonService.create(createLessonDto, file);

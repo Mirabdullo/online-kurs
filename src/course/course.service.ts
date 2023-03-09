@@ -2,10 +2,8 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
-  InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { isArray } from 'class-validator';
 import { FilesService } from '../uploads/files.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
@@ -19,28 +17,28 @@ export class CourseService {
   ) {}
   async create(createCourseDto: CreateCourseDto, files: any) {
     try {
-      const file = [files.image[0], files.logo[0]]
       createCourseDto.price = Number(createCourseDto.price)
-      
-      if (file) {
-        const fileName = await this.fileService.createFile(file);
+        let upload_image: string = ''
+        let upload_logo: string = ''
+        if(files.image){
+          upload_image = await this.fileService.createFile(files.image[0])         
+        }
+  
+        if(files.logo){
+          upload_logo = await this.fileService.createFile(files.logo[0])
+        }
         await this.courseRepository.create({
           ...createCourseDto,
-          image: fileName[0].split('.')[1] !== 'svg' ? fileName[0] : fileName[1],
-          logo: fileName[0].split('.')[1] === 'svg' ? fileName[0] : fileName[1],
+          image: upload_image,
+          logo: upload_logo,
         });
         return {
           statusCode: 201,
           message: 'Created',
         };
-      } else {
-        await this.courseRepository.create(createCourseDto);
 
-        return {
-          statusCode: 201,
-          message: 'Created',
-        };
-      }
+
+
     } catch (error) {
       console.log(error);
       throw new HttpException(error.message, error.status);
@@ -50,7 +48,6 @@ export class CourseService {
   async findAll() {
     try {
       return await this.courseRepository.findAll({
-        // attributes: ['id','category_id', 'title', 'description', 'image', 'price'],
         include:{all: true}
       });
     } catch (error) {
@@ -61,7 +58,6 @@ export class CourseService {
   async findOne(id: string) {
     try {
       return await this.courseRepository.findByPk(id, {
-        // attributes: ['id','category_id', 'title', 'description', 'image', 'price'],
         include:{all: true}
       });
     } catch (error) {
@@ -76,41 +72,32 @@ export class CourseService {
         throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND);
 
       if (!files) {
-        const file = [files.image[0], files.logo[0]]
-        await this.fileService.removeFile(course.image);
-        const fileName = await this.fileService.createFile(file);
-        if(fileName.length === 1 && fileName[0].split('.')[1] === 'svg'){
-          return await this.courseRepository.update(
-            {
-              ...updateCourseDto,
-              logo: fileName[0],
-            },
-            {
-              where: { id: id },
-            },
-          );
-        } else if(fileName.length === 1 && fileName[0].split('.')[1] !== 'svg'){
-          return await this.courseRepository.update(
-            {
-              ...updateCourseDto,
-              image: fileName[0]
-            },
-            {
-              where: { id: id },
-            },
-          );
-        } else {
-          return await this.courseRepository.update(
-            {
-              ...updateCourseDto,
-              image: fileName[0].split('.')[1] !== 'svg' ? fileName[0] : fileName[1],
-              logo: fileName[0].split('.')[1] === 'svg' ? fileName[0] : fileName[1],
-            },
-            {
-              where: { id: id },
-            },
-          );
+        let upload_image: string = ''
+        let upload_logo: string = ''
+        if(files.image){
+          upload_image = await this.fileService.createFile(files.image[0])         
         }
+  
+        if(files.logo){
+          upload_logo = await this.fileService.createFile(files.logo[0])
+        }
+
+          await this.courseRepository.update(
+            {
+              ...updateCourseDto,
+              image: upload_image,
+              logo: upload_logo,
+            },
+            {
+              where: { id: id },
+            },
+          );
+
+          return {
+            statusCode: 200,
+            message: "Updated"
+          }
+        
 
       }
       await this.courseRepository.update(updateCourseDto, {

@@ -48,6 +48,16 @@ export class Student extends Model<Student> {
   })
   password: string;
 
+
+
+  @ApiProperty({ type: 'string', format: "binary", description: 'Studentning profil rasmi' })
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  image: string;
+
+
   @ApiProperty({
     example: '039q4uriojf03fh03-rih4qefjq9rf-3pojedfq-weod-p3rj',
     description: 'Studentning hashlangan refresh tokeni',

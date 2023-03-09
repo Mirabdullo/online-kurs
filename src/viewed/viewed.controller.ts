@@ -7,11 +7,13 @@ import {
   Patch,
   Param,
   Delete,
+  Req,
 } from '@nestjs/common';
 import { ViewedService } from './viewed.service';
 import { CreateViewedDto } from './dto/create-viewed.dto';
 import { UpdateViewedDto } from './dto/update-viewed.dto';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { Request } from 'express';
 
 @ApiTags('Viewed')
 @Controller('viewed')
@@ -25,24 +27,12 @@ export class ViewedController {
     return this.viewedService.create(createViewedDto);
   }
 
-  @ApiOperation({ summary: 'Barcha korilgan darslar royxati' })
-  @ApiResponse({ status: 200, type: [Viewed] })
-  @Get()
-  findAll() {
-    return this.viewedService.findAll();
+
+  @ApiOperation({ summary: 'Course id va Student id orqali Kursni necha foizini yakunlagani haqida' })
+  @ApiResponse({ status: 200, type: Viewed })
+  @Get(':student_id/:course_id')
+  findOne(@Param('student_id') student_id: string, @Param('course_id') course_id: string) {
+    return this.viewedService.findOne( student_id, course_id);
   }
 
-  @ApiOperation({ summary: 'Viewed id orqali Kursni necha foizini yakunlagani haqida' })
-  @ApiResponse({ status: 200, type: Viewed })
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.viewedService.findOne(id);
-  }
-
-  @ApiOperation({ summary: 'Korilganlarni id orqali ochirish' })
-  @ApiResponse({ status: 200, type: Viewed })
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.viewedService.remove(id);
-  }
 }

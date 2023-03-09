@@ -6,6 +6,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { CreateViewedDto } from './dto/create-viewed.dto';
 import { UpdateViewedDto } from './dto/update-viewed.dto';
 import { Viewed } from './entities/viewed.entity';
+import { Request } from 'express';
 
 @Injectable()
 export class ViewedService {
@@ -56,22 +57,13 @@ export class ViewedService {
     }
   }
 
-  async findAll() {
-    try {
-      return await this.viewedRepository.findAll({ attributes: ['id', 'student_id', 'course_id', 'modules', 'lessons'] });
-    } catch (error) {
-      console.log(error);
-      throw new HttpException(error.message, error.status);
-    }
-  }
 
-  async findOne(id: string) {
+  async findOne(student_id: string, course_id: string) {
     try {
-      const data = await this.viewedRepository.findOne({where: {id: id}});
-      console.log(data.dataValues);
+      console.log(course_id);
+      const data = await this.viewedRepository.findOne({where: {student_id, course_id}});
+      if(!data) throw new HttpException("Not Found", HttpStatus.NOT_FOUND)
       const lessons = await this.courseService.findOne(data.course_id)
-      console.log(lessons.lessons);
-      console.log(data.lessons);
       const viewed = (100 / lessons.lessons) * data.lessons.length
       return {
         sale: viewed.toFixed(),

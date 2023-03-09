@@ -24,8 +24,8 @@ export class HighlightsController {
     return this.highlightsService.findAll();
   }
 
-  @ApiOperation({ summary: 'Id orqali bitta Highlights' })
-  @ApiResponse({ status: 200, type: Highlight })
+  @ApiOperation({ summary: 'Course id orqali kursga tegishli Highlights' })
+  @ApiResponse({ status: 200, type: [Highlight] })
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.highlightsService.findOne(id);

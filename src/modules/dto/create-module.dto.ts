@@ -25,8 +25,4 @@ export class CreateModuleDto {
   @IsString()
   description: string;
 
-  @ApiProperty({ example: 'image.jpeg', description: 'Image module' })
-  @IsOptional()
-  @IsString()
-  image: string;
 }

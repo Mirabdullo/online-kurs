@@ -9,7 +9,8 @@ import { TokensModule } from '../tokens/tokens.module';
 @Module({
   imports: [
     SequelizeModule.forFeature([Admin]),
-    TokensModule
+    TokensModule,
+    JwtModule
   ],
   controllers: [AdminsController],
   providers: [AdminsService]

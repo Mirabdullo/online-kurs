@@ -7,9 +7,10 @@ import {
   Param,
   Delete,
   Res,
+  Req,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { AdminsService } from './admins.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { LoginDto } from './dto/login-auth.dto';
@@ -43,9 +44,9 @@ export class AdminsController {
 
   @ApiOperation({ summary: 'Admin logout qilish' })
   @ApiResponse({ status: 200, type: Admin })
-  @Get('logout/:id')
-  logout(@Param('id') id: string) {
-    return this.adminsService.logout(id);
+  @Get('logout')
+  logout(@Req() req: Request) {
+    return this.adminsService.logout(req);
   }
 
   @ApiOperation({ summary: 'Barcha adminlar royxati' })
@@ -55,24 +56,18 @@ export class AdminsController {
     return this.adminsService.findAll();
   }
 
-  @ApiOperation({ summary: 'Id orqali bitta admin malumotlarini olish' })
+  @ApiOperation({ summary: 'Adminning shaxsiy malumotlari' })
   @ApiResponse({ status: 200, type: Admin })
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.adminsService.findOne(id);
+  @Get('all')
+  findOne(@Req() req: Request) {
+    return this.adminsService.findOne(req);
   }
 
-  @ApiOperation({ summary: 'Id orqali bitta admin malumotlarini ozgartirish' })
-  @ApiResponse({ status: 200, type: Admin })
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAdminDto: UpdateAdminDto) {
-    return this.adminsService.update(id, updateAdminDto);
-  }
 
-  @ApiOperation({ summary: 'Adminni ochirish logout' })
+  @ApiOperation({ summary: 'Update admin data by token' })
   @ApiResponse({ status: 200, type: Admin })
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.adminsService.remove(id);
+  @Patch('update')
+  update(@Req() req: Request, @Body() updateAdminDto: UpdateAdminDto) {
+    return this.adminsService.update(req, updateAdminDto);
   }
 }

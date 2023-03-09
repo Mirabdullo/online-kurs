@@ -1,5 +1,4 @@
 import { Modules } from './../../modules/entities/module.entity';
-import { CourseHighlight } from './../../course_highlights/entities/course_highlight.entity';
 import { Highlight } from './../../highlights/entities/highlight.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import {
@@ -39,7 +38,7 @@ export class Course extends Model<Course> {
   @ApiProperty({ example: 'image.svg', description: 'Course logosi' })
   @Column({
     type: DataType.STRING,
-    allowNull: true,
+    allowNull: false,
   })
   logo: string;
 
@@ -104,8 +103,8 @@ export class Course extends Model<Course> {
   @BelongsTo(() => Category)
   category: Category;
 
-  @HasMany(() => CourseHighlight)
-  highlights: CourseHighlight[];
+  // @HasMany(() => Highlight)
+  // highlights: Highlight[];
 
   @HasOne(() => Statistic)
   statistics: Statistic

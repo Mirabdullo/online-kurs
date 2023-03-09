@@ -7,7 +7,7 @@ export class CreateHighlightDto {
     @IsString()
     title: string;
 
-    @ApiProperty({ example: 'Guided study plans', description: 'Guided study plans' })
+    @ApiProperty({ example: 'Guided studys plans', description: 'Guided study plans' })
     @IsNotEmpty()
     @IsString()
     description: string;

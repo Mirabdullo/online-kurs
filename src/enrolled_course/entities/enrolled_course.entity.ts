@@ -10,7 +10,7 @@ import {
 import { Course } from '../../course/entities/course.entity';
 import { Student } from '../../students/entities/student.entity';
 
-@Table({ tableName: 'enrolled_course', timestamps: false })
+@Table({ tableName: 'enrolled_course', createdAt: true })
 export class EnrolledCourse extends Model<EnrolledCourse> {
   @ApiProperty({
     example: '173ef952-79bb-489d-9cfc-62db0d8114b4',

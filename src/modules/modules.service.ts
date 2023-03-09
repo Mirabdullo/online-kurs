@@ -8,25 +8,20 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { FilesService } from '../uploads/files.service';
 import { CreateModuleDto } from './dto/create-module.dto';
 import { UpdateModuleDto } from './dto/update-module.dto';
 import { Modules } from './entities/module.entity';
-import { LessonService } from '../lesson/lesson.service';
 
 @Injectable()
 export class ModulesService {
   constructor(
     @InjectModel(Modules) private moduleRepository: typeof Modules,
-    private readonly fileService: FilesService,
   ) {}
   async create(createModuleDto: CreateModuleDto, file: any) {
     try {
       if (file) {
-        const fileName = await this.fileService.createFile(file);
         const lesson = await this.moduleRepository.create({
           ...createModuleDto,
-          image: fileName,
         });
         return lesson;
       } else {
@@ -84,13 +79,10 @@ export class ModulesService {
         throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND);
 
       if (file) {
-        await this.fileService.removeFile(data.image);
-        const fileName = await this.fileService.createFile(file);
 
         return await this.moduleRepository.update(
           {
             ...updateModuleDto,
-            image: fileName,
           },
           {
             where: { id: id },

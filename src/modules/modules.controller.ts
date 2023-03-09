@@ -13,7 +13,7 @@ import { ModulesService } from './modules.service';
 import { CreateModuleDto } from './dto/create-module.dto';
 import { UpdateModuleDto } from './dto/update-module.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags, ApiConsumes } from '@nestjs/swagger';
 import { Modules } from './entities/module.entity';
 
 @ApiTags('Modules')
@@ -54,6 +54,7 @@ export class ModulesController {
   @ApiOperation({ summary: 'Id orqali bitta moduleni ozgartirish' })
   @ApiResponse({ status: 200, type: Modules })
   @UseInterceptors(FileInterceptor('image'))
+  @ApiConsumes('multipart/form-data')
   @Patch(':id')
   update(
     @Param('id') id: string,

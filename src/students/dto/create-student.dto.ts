@@ -24,4 +24,10 @@ export class CreateStudentDto {
     @IsString({message: "password must be a string"})
     password: string
 
+
+
+    @ApiProperty({ type: "string",format: "binary", required: false, description: 'Studentning rasmi'})
+    @IsOptional()
+    @IsString()
+    image: string
 }

@@ -36,28 +36,28 @@ export class CreateCourseDto {
   description: string;
 
 
-  @ApiProperty({ example: '', description: 'Course narxi' })
+  @ApiProperty({ example: '', description: 'Course narxi'  , required: false})
   @IsOptional()
   @IsString()
   price: number;
 
-  @ApiProperty({ example: '3', description: 'Course darajasi' })
+  @ApiProperty({ example: '3', description: 'Course darajasi' , required: false })
   @IsOptional()
   @IsNumberString()
   level: number;
 
-  @ApiProperty({ example: '66', description: 'Coursegi darslar soni' })
+  @ApiProperty({ example: '66', description: 'Coursegi darslar soni' , required: false })
   @IsOptional()
   @IsNumberString()
   lessons: number;
 
 
-  @ApiProperty({ example: '66', description: 'Coursegi darslar soni' })
+  @ApiProperty({ type: 'string', format: 'binary' , required: false})
   @IsOptional()
   image: string;
 
 
-  @ApiProperty({ example: '66', description: 'Coursegi darslar soni' })
+  @ApiProperty({ type: 'string', format: 'binary' , required: false})
   @IsOptional()
   logo: string;
 

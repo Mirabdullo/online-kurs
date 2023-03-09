@@ -1,5 +1,4 @@
 import { Highlight } from './highlights/entities/highlight.entity';
-import { CourseHighlight } from './course_highlights/entities/course_highlight.entity';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
@@ -32,9 +31,9 @@ import { LikedCourse } from './liked_course/entities/liked_course.entity';
 import { Viewed } from './viewed/entities/viewed.entity';
 import { ModuleTests } from './module_test/entities/module_test.entity';
 import { HighlightsModule } from './highlights/highlights.module';
-import { CourseHighlightsModule } from './course_highlights/course_highlights.module';
 import { StatisticsModule } from './statistics/statistics.module';
 import { Statistic } from './statistics/entities/statistic.entity';
+import { MinioClientModule } from './minio-client/minio-client.module';
 
 
 @Module({
@@ -57,7 +56,7 @@ import { Statistic } from './statistics/entities/statistic.entity';
         username: config.get<string>('POSTGRES_USER'),
         password: config.get<string>('POSTGRES_PASSWORD'),
         database: config.get<string>('POSTGRES_DB'),
-        models: [Admin, Category, Student, Modules, Course, Lesson, Rate, EnrolledCourse, LikedCourse, Viewed, ModuleTests, CourseHighlight, Statistic, Highlight],
+        models: [Admin, Category, Student, Modules, Course, Lesson, Rate, EnrolledCourse, LikedCourse, Viewed, ModuleTests, Statistic, Highlight],
         autoLoadModels: true,
         synchronize: true,
         logging: false,
@@ -84,9 +83,9 @@ import { Statistic } from './statistics/entities/statistic.entity';
 
     HighlightsModule,
 
-    CourseHighlightsModule,
-
     StatisticsModule,
+
+    MinioClientModule,
 
 
 

@@ -22,18 +22,12 @@ export class EnrolledCourseService {
   async create(createEnrolledCourseDto: CreateEnrolledCourseDto, req: Request) {
     try {
 
-      let token = ''
-      for(const item of req.rawHeaders){
-        if(item.includes('Bearer')){
-          token = item.split(' ')[1]
-        }
-      }
+      let token = req.headers.authorization
       if(!token) {
         throw new UnauthorizedException("Token topilmadi")
       }
       const student = this.jwtService.verify(token,{secret: process.env.ACCESS_TOKEN_KEY})
-      if(!student) throw new UnauthorizedException("Ruxsat etilmagan")
-      console.log(student);
+      
       await this.enrolledRepository.create({
         student_id: student.id,
         course_id: createEnrolledCourseDto.course_id
@@ -44,23 +38,23 @@ export class EnrolledCourseService {
       };
     } catch (error) {
       console.log(error);
+      if (error.message.includes('invalid signature')) {
+        throw new HttpException('Invalid token', HttpStatus.UNAUTHORIZED);
+      } else if (error.message.includes('jwt expired')) {
+        throw new HttpException('Jwt expired', HttpStatus.UNAUTHORIZED);
+      }
       throw new HttpException(error.message, error.status);
     }
   }
 
   async findAll(req: Request) {
     try {
-      let token = ''
-      for(const item of req.rawHeaders){
-        if(item.includes('Bearer')){
-          token = item.split(' ')[1]
-        }
-      }
+      let token = req.headers.authorization
       if(!token) {
         throw new UnauthorizedException("Token topilmadi")
       }
       const student = this.jwtService.verify(token,{secret: process.env.ACCESS_TOKEN_KEY})
-      if(!student) throw new UnauthorizedException("Ruxsat etilmagan")
+      
       return await this.enrolledRepository.findAll({
         attributes: ['student_id', 'course_id'],
         where: {student_id: student.id},
@@ -68,22 +62,11 @@ export class EnrolledCourseService {
         
       });
     } catch (error) {
-      throw new HttpException(error.message, error.status);
-    }
-  }
-
-  async findOne(id: string) {
-    try {
-      const data = await this.enrolledRepository.findAll({
-        where: { student_id: id },
-        attributes: ['student_id'],
-        include: { all: true },
-      });
-      if (!data) {
-        throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+      if (error.message.includes('invalid signature')) {
+        throw new HttpException('Invalid token', HttpStatus.UNAUTHORIZED);
+      } else if (error.message.includes('jwt expired')) {
+        throw new HttpException('Jwt expired', HttpStatus.UNAUTHORIZED);
       }
-      return data;
-    } catch (error) {
       throw new HttpException(error.message, error.status);
     }
   }

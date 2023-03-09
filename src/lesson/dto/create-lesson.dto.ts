@@ -14,7 +14,7 @@ export class CreateLessonDto {
   @IsString({ message: 'title must be a string' })
   title: string;
 
-  @ApiProperty({ example: 'Video', description: 'Videoning nomi' })
+  @ApiProperty({ type: 'string', format: 'binary' , required: false})
   @IsOptional()
   @IsString()
   video: string;
