@@ -36,4 +36,12 @@ export class CategoryService {
     }
   }
 
+  async findOne(id: string) {
+    try {
+      return await this.categoryRepository.findByPk(id);
+    } catch (error) {
+      throw new HttpException(error.message, error.status);
+    }
+  }
+
 }

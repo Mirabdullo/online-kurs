@@ -1,3 +1,4 @@
+import { StudentsService } from './../students/students.service';
 import {
   CanActivate,
   ExecutionContext,
@@ -11,7 +12,8 @@ import { Observable } from 'rxjs';
 
 @Injectable()
 export class UserGuards implements CanActivate {
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(private readonly jwtService: JwtService,
+    private studentService: StudentsService) {}
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
@@ -28,6 +30,7 @@ export class UserGuards implements CanActivate {
       const user = this.jwtService.verify(token, {
         secret: process.env.ACCESS_TOKEN_KEY,
       });
+      console.log( this.studentService.findOne(user.id));
       if (user.role !== 'student') {
         throw new UnauthorizedException({
           message: 'Foydalanuvchiga ruxsat etilmagan',

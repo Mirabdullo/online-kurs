@@ -28,6 +28,9 @@ export class LessonService {
         message: 'Created',
       };
     } catch (error) {
+      if(!error.status){
+        throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
       throw new HttpException(error.message, error.status);
     }
   }
@@ -52,6 +55,9 @@ export class LessonService {
         include: { all: true },
       });
     } catch (error) {
+      if(!error.status){
+        throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
       throw new HttpException(error.message, error.status);
     }
   }
@@ -67,6 +73,9 @@ export class LessonService {
       }
       return data;
     } catch (error) {
+      if(!error.status){
+        throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
       throw new HttpException(error.message, error.status);
     }
   }
@@ -99,6 +108,9 @@ export class LessonService {
         message: "Updated"
       }
     } catch (error) {
+      if(!error.status){
+        throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
       throw new HttpException(error.message, error.status);
     }
   }
@@ -110,6 +122,9 @@ export class LessonService {
         throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND);
       return await this.lessonRepository.destroy({ where: { id: id } });
     } catch (error) {
+      if(!error.status){
+        throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
       throw new HttpException(error.message, error.status);
     }
   }

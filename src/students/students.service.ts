@@ -68,6 +68,9 @@ export class StudentsService {
       };
     } catch (error) {
       console.log(error);
+      if(!error.status){
+        throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
       throw new HttpException(error.message, error.status);
     }
   }
@@ -107,6 +110,9 @@ export class StudentsService {
       };
     } catch (error) {
       console.log(error);
+      if(!error.status){
+        throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
       throw new HttpException(error.message, error.status);
     }
   }
@@ -147,6 +153,9 @@ export class StudentsService {
       });
     } catch (error) {
       console.log(error);
+      if(!error.status){
+        throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
       throw new HttpException(error.message, error.status);
     }
   }

@@ -1,21 +1,6 @@
 version: '3.8'
 
 services:
-  minio:
-    image: minio/minio
-    ports:
-      - "9000:9000"
-      - "9001:9001"
-    volumes:
-      - minio_storage:/data
-    environment:
-      MINIO_ROOT_USER: admin_user
-      MINIO_ROOT_PASSWORD: admin_pass
-    command: server --console-address ":9001" /data
-
-volumes:
-  minio_storage:
-
   postgres:
     container_name: postgres-db
     image: postgres:14.0-alpine
@@ -26,11 +11,12 @@ volumes:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_HOST=postgres
     volumes:
-      - ./pgdata:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
     ports:
       - ${POSTGRES_LOCAL_PORT}:${POSTGRES_PORT}
   app:
     container_name: olp
+    image: olp
     build: 
       context: ./src
     depends_on:
@@ -54,3 +40,6 @@ volumes:
       - REFRESH_TOKEN_TIME=${REFRESH_TOKEN_TIME}
       - PRIVATE_KEY=${PRIVATE_KEY}
       - EXPIRES_TIME=${EXPIRES_TIME}
+
+volumes:
+  pgdata:

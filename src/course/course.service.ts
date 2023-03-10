@@ -1,7 +1,10 @@
+import { CategoryService } from './../category/category.service';
 import {
+  BadRequestException,
   HttpException,
   HttpStatus,
   Injectable,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { FilesService } from '../uploads/files.service';
@@ -14,6 +17,7 @@ export class CourseService {
   constructor(
     @InjectModel(Course) private courseRepository: typeof Course,
     private readonly fileService: FilesService,
+    private readonly categoryService: CategoryService
   ) {}
   async create(createCourseDto: CreateCourseDto, files: any) {
     try {
@@ -26,6 +30,10 @@ export class CourseService {
   
         if(files.logo){
           upload_logo = await this.fileService.createFile(files.logo[0])
+        }
+
+        if(!(await this.categoryService.findOne(createCourseDto.category_id))){
+          throw new BadRequestException("category_id does not matched")
         }
         await this.courseRepository.create({
           ...createCourseDto,
@@ -40,7 +48,9 @@ export class CourseService {
 
 
     } catch (error) {
-      console.log(error);
+      if(!error.status){
+        throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
       throw new HttpException(error.message, error.status);
     }
   }
@@ -51,6 +61,9 @@ export class CourseService {
         include:{all: true}
       });
     } catch (error) {
+      if(!error.status){
+        throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
       throw new HttpException(error.message, error.status);
     }
   }
@@ -61,6 +74,9 @@ export class CourseService {
       return courses
     } catch (error) {
       console.log(error);
+      if(!error.status){
+        throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
       throw new HttpException(error.message, error.status)
     }
   }
@@ -71,6 +87,9 @@ export class CourseService {
         include:{all: true}
       });
     } catch (error) {
+      if(!error.status){
+        throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
       throw new HttpException(error.message, error.status);
     }
   }
@@ -120,6 +139,9 @@ export class CourseService {
         message: "Updated"
       }
     } catch (error) {
+      if(!error.status){
+        throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
       throw new HttpException(error.message, error.status);
     }
   }
@@ -132,6 +154,9 @@ export class CourseService {
 
       return await this.courseRepository.destroy({ where: { id: id } });
     } catch (error) {
+      if(!error.status){
+        throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
       throw new HttpException(error.message, error.status);
     }
   }

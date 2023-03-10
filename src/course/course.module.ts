@@ -1,3 +1,4 @@
+import { CategoryModule } from './../category/category.module';
 import { MinioClientModule } from './../minio-client/minio-client.module';
 import { ConfigModule } from '@nestjs/config';
 import { Module } from '@nestjs/common';
@@ -15,7 +16,8 @@ import { MulterModule } from '@nestjs/platform-express';
     SequelizeModule.forFeature([Course, Category, Statistic]),
     FilesModule,
     ConfigModule,
-    MinioClientModule
+    MinioClientModule,
+    CategoryModule
   ],
   controllers: [CourseController],
   providers: [CourseService],

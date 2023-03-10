@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Body,
+  Param,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CategoryService } from './category.service';
@@ -27,4 +28,10 @@ export class CategoryController {
     return this.categoryService.findAll();
   }
 
+  @ApiOperation({summary: "Category by id"})
+  @ApiResponse({status: 200, type: Category})
+  @Get(':id')
+  findOne(@Param('id') id: string){
+    return this.categoryService.findOne(id)
+  }
 }

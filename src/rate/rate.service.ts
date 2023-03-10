@@ -22,6 +22,9 @@ export class RateService {
         message: 'Created',
       };
     } catch (error) {
+      if(!error.status){
+        throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
       throw new HttpException(error.message, error.status);
     }
   }
@@ -33,6 +36,9 @@ export class RateService {
         include: { all: true },
       });
     } catch (error) {
+      if(!error.status){
+        throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
       throw new HttpException(error.message, error.status);
     }
   }
@@ -55,6 +61,9 @@ export class RateService {
       };
     } catch (error) {
       console.log(error);
+      if(!error.status){
+        throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
       throw new InternalServerErrorException(error);
     }
   }
@@ -70,6 +79,9 @@ export class RateService {
       }
       return data;
     } catch (error) {
+      if(!error.status){
+        throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
       throw new HttpException(error.message, error.status);
     }
   }
@@ -90,6 +102,9 @@ export class RateService {
         message: "Updated"
       }
     } catch (error) {
+      if(!error.status){
+        throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
       throw new HttpException(error.message, error.status);
     }
   }
@@ -101,6 +116,9 @@ export class RateService {
         throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND);
       return await this.rateRepository.destroy({ where: { id: id } });
     } catch (error) {
+      if(!error.status){
+        throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
       throw new HttpException(error.message, error.status);
     }
   }

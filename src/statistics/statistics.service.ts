@@ -18,6 +18,9 @@ export class StatisticsService {
       };
     } catch (error) {
       console.log(error);
+      if(!error.status){
+        throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
       throw new HttpException(error.message, error.status);
     }
   }
@@ -28,6 +31,9 @@ export class StatisticsService {
         attributes: ['id','title', "description"],
       });
     } catch (error) {
+      if(!error.status){
+        throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
       throw new HttpException(error.message, error.status);
     }
   }
@@ -43,6 +49,9 @@ export class StatisticsService {
       }
       return data;
     } catch (error) {
+      if(!error.status){
+        throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
       throw new HttpException(error.message, error.status);
     }
   }
@@ -62,6 +71,9 @@ export class StatisticsService {
         message: "Updated"
       }
     } catch (error) {
+      if(!error.status){
+        throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
       throw new HttpException(error.message, error.status);
     }
   }
@@ -73,6 +85,9 @@ export class StatisticsService {
         throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND);
       return await this.statisticRepository.destroy({ where: { id: id } });
     } catch (error) {
+      if(!error.status){
+        throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
       throw new HttpException(error.message, error.status);
     }
   }

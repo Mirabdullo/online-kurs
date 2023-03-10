@@ -1,5 +1,6 @@
 import { JwtService } from '@nestjs/jwt';
 import {
+  BadRequestException,
   HttpException,
   HttpStatus,
   Injectable,
@@ -11,13 +12,15 @@ import { Request } from 'express';
 import { CreateEnrolledCourseDto } from './dto/create-enrolled_course.dto';
 import { UpdateEnrolledCourseDto } from './dto/update-enrolled_course.dto';
 import { EnrolledCourse } from './entities/enrolled_course.entity';
+import { CourseService } from '../course/course.service';
 
 @Injectable()
 export class EnrolledCourseService {
   constructor(
     @InjectModel(EnrolledCourse)
     private enrolledRepository: typeof EnrolledCourse,
-    private jwtService: JwtService
+    private jwtService: JwtService,
+    private courseService: CourseService
   ) {}
   async create(createEnrolledCourseDto: CreateEnrolledCourseDto, req: Request) {
     try {
@@ -28,6 +31,10 @@ export class EnrolledCourseService {
       }
       const student = this.jwtService.verify(token,{secret: process.env.ACCESS_TOKEN_KEY})
       
+      if(!(await this.courseService.findOne(createEnrolledCourseDto.course_id))){
+        throw new BadRequestException("course id does not matched")
+      }
+
       await this.enrolledRepository.create({
         student_id: student.id,
         course_id: createEnrolledCourseDto.course_id
@@ -79,6 +86,9 @@ export class EnrolledCourseService {
         throw new HttpException("Ma'lumot topilmadi", HttpStatus.NOT_FOUND);
       return await this.enrolledRepository.destroy({ where: { id: id } });
     } catch (error) {
+      if(!error.status){
+        throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
       throw new HttpException(error.message, error.status);
     }
   }
