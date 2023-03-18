@@ -100,6 +100,7 @@ export class AdminsService {
       const tokens = await this.tokenService.getTokens(payload);
 
       return {
+        is_admin: true,
         access_token: tokens.access_token,
       };
     } catch (error) {

@@ -4,7 +4,7 @@ export
 
 check-conn:
 	chmod +x ./scripts/check-connection.sh \
-	&& ./scripts/check-connection.sh
+	&& ./scripts/check-connection.sh re
 
 build:
 	docker build -t olp .
