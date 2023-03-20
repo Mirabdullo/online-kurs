@@ -33,7 +33,6 @@ import { ModuleTests } from './module_test/entities/module_test.entity';
 import { HighlightsModule } from './highlights/highlights.module';
 import { StatisticsModule } from './statistics/statistics.module';
 import { Statistic } from './statistics/entities/statistic.entity';
-import { MinioClientModule } from './minio-client/minio-client.module';
 
 
 @Module({
@@ -84,10 +83,6 @@ import { MinioClientModule } from './minio-client/minio-client.module';
     HighlightsModule,
 
     StatisticsModule,
-
-    MinioClientModule,
-
-
 
   ],
   controllers: [],
