@@ -40,7 +40,7 @@ import { MinioClientModule } from './minio-client/minio-client.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: `.${process.env.NODE_ENV}.env`,
+      envFilePath: `.development.env`,
     }),
     ServeStaticModule.forRoot({
       rootPath: resolve(__dirname, 'static'),
