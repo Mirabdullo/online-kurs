@@ -54,7 +54,7 @@ export class EnrolledCourseService {
     }
   }
 
-  async findAll(req: Request) {
+  async findOne(req: Request) {
     try {
       let token = req.headers.authorization
       if(!token) {
@@ -73,8 +73,37 @@ export class EnrolledCourseService {
         throw new HttpException('Invalid token', HttpStatus.UNAUTHORIZED);
       } else if (error.message.includes('jwt expired')) {
         throw new HttpException('Jwt expired', HttpStatus.UNAUTHORIZED);
+      } else if(!error.status){
+        throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
       }
       throw new HttpException(error.message, error.status);
+    }
+  }
+
+
+  async findStatistic(){
+    try {
+      let date = new Date()
+      date.setFullYear(date.getFullYear() - 1)
+      const allEnrolled = await this.enrolledRepository.findAll()
+      const arr = []
+      for(let i = 0; i < 12; i++){
+        date.setMonth(date.getMonth() + 1)
+        let statistika = allEnrolled.filter(el => el.createdAt.getFullYear() == date.getFullYear() && el.createdAt.getMonth() == date.getMonth())
+        arr.push({date: date.toLocaleDateString(), statistics: statistika.length })
+      }
+      let years = 0
+      arr.forEach(el => years+=el.statistics)
+      return {
+        all: allEnrolled.length,
+        years: years,
+        months: arr
+      }
+    } catch (error) {
+      if(!error.status){
+        throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
+      throw new HttpException(error.message, error.status)
     }
   }
 

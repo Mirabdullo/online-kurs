@@ -62,6 +62,15 @@ export class StudentsController {
     return this.studentsService.findAll();
   }
 
+  
+
+  @ApiOperation({summary: "Studentlar statistikasi"})
+  @ApiResponse({status: 200, type: Object})
+  @Get('statistic')
+  findStatistic() {
+    return this.studentsService.findStatistics()
+  }
+
   @ApiOperation({ summary: 'student shaxsiy malumotlari' })
   @ApiResponse({ status: 200, type: Student })
   @Get()

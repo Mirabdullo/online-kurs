@@ -33,8 +33,17 @@ export class EnrolledCourseController {
   @ApiBearerAuth()
   @Get()
   findAll(@Req() req: Request) {
-    return this.enrolledCourseService.findAll(req);
+    return this.enrolledCourseService.findOne(req);
   }
+
+  @ApiOperation({summary: "Umumiy sotib olingan kurslar"})
+  @ApiResponse({status: 200, type: Number})
+  @Get('statistic')
+  findStatistic() {
+    return this.enrolledCourseService.findStatistic();
+  }
+
+  
 
 
   @ApiOperation({summary: "Id orqali bitta enrolled kursni o'chirish"})

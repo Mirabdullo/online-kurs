@@ -42,7 +42,7 @@ export class Modules extends Model<Modules> {
 
   @ApiProperty({ example: 'Description', description: 'Description nomi' })
   @Column({
-    type: DataType.STRING,
+    type: DataType.TEXT,
     allowNull: false,
   })
   description: string;

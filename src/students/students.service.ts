@@ -160,6 +160,34 @@ export class StudentsService {
     }
   }
 
+  // Student statistics
+  async findStatistics(){
+    try {
+      let date = new Date()
+      date.setFullYear(date.getFullYear() - 1)
+      const students = await this.studentRepository.findAll()
+      const arr = []
+      for(let i = 0; i < 12; i++){
+        date.setMonth(date.getMonth() + 1)
+        let statistika = students.filter(el => el.createdAt.getFullYear() == date.getFullYear() && el.createdAt.getMonth() == date.getMonth())
+        arr.push({date: date.toLocaleDateString(), statistics: statistika.length })
+      }
+      let years = 0
+      arr.forEach(el => years+=el.statistics)
+      return {
+        all: students.length,
+        years: years,
+        months: arr
+      }
+    } catch (error) {
+      console.log(error);
+      if(!error.status){
+        throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
+      throw new HttpException(error.message, error.status)
+    }
+  }
+
   async findOne(req: Request) {
     try {
       let token = req.headers.authorization

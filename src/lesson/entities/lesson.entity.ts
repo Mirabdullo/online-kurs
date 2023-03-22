@@ -38,7 +38,7 @@ export class Lesson extends Model<Lesson> {
 
   @ApiProperty({ example: 'Description', description: 'Description nomi' })
   @Column({
-    type: DataType.STRING,
+    type: DataType.TEXT,
     allowNull: true,
   })
   description: string;

@@ -62,7 +62,7 @@ export class Course extends Model<Course> {
     description: 'Course haqida malumotlar',
   })
   @Column({
-    type: DataType.STRING,
+    type: DataType.TEXT,
     allowNull: false,
   })
   description: string;
