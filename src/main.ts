@@ -5,14 +5,11 @@ import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser'
 
 
-
-
 async function start() {
   
   const app = await NestFactory.create(AppModule);
 
   const PORT = process.env.PORT
-
 
   app.useGlobalPipes(new ValidationPipe())
   app.use(cookieParser())
