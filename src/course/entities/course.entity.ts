@@ -11,7 +11,6 @@ import {
   Model,
   Table,
 } from 'sequelize-typescript';
-import { Category } from '../../category/entities/category.entity';
 import { Statistic } from '../../statistics/entities/statistic.entity';
 
 @Table({ tableName: 'course', timestamps: true, paranoid: true })
@@ -68,15 +67,6 @@ export class Course extends Model<Course> {
   description: string;
 
 
-  @ApiProperty({ example: '173ef952-79bb-489d-9cfc-62db0d8114b4', description: 'Curs haqida highlights' })
-  @ForeignKey(() => Category)
-  @Column({
-    type: DataType.UUID,
-    allowNull: true,
-  })
-  category_id: string;
-
-
   @ApiProperty({ example: '', description: 'Course narxi' })
   @Column({
     type: DataType.DECIMAL,
@@ -99,9 +89,6 @@ export class Course extends Model<Course> {
     allowNull: true,
   })
   lessons: number;
-
-  @BelongsTo(() => Category)
-  category: Category;
 
   // @HasMany(() => Highlight)
   // highlights: Highlight[];

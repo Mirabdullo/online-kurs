@@ -21,7 +21,7 @@ export class FilesService {
         file.mimetype === 'video/mp4'
       ) {
         let fileName = uuid.v4() + extname(file.originalname);
-        const filePath = path.resolve(__dirname, '..', 'static');
+        const filePath = path.resolve(__dirname, '..','..', 'static');
         if (!fs.existsSync(filePath)) {
           fs.mkdirSync(filePath, { recursive: true });
         }

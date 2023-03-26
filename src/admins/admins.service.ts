@@ -53,11 +53,11 @@ export class AdminsService {
 
       return {
         access_token: tokens.access_token,
-    
+
       };
     } catch (error) {
       console.log(error);
-      if(!error.status){
+      if (!error.status) {
         throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
       }
       throw new HttpException(error.message, error.status);
@@ -105,7 +105,7 @@ export class AdminsService {
       };
     } catch (error) {
       console.log(error);
-      if(!error.status){
+      if (!error.status) {
         throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
       }
       throw new HttpException(error.message, error.status);
@@ -143,11 +143,11 @@ export class AdminsService {
   async findAll() {
     try {
       return await this.adminRepository.findAll({
-        attributes: ['first_name', 'last_name', 'email'],
+        include: {all: true},
       });
     } catch (error) {
       console.log(error);
-      if(!error.status){
+      if (!error.status) {
         throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
       }
       throw new HttpException(error.message, error.status);
@@ -221,7 +221,7 @@ export class AdminsService {
       };
     } catch (error) {
       console.log(error);
-      if(!error.status){
+      if (!error.status) {
         throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
       }
       throw new HttpException(error.message, error.status);

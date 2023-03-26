@@ -7,7 +7,6 @@ import { resolve } from 'path';
 import { AdminsModule } from './admins/admins.module';
 import { StudentsModule } from './students/students.module';
 import { ModuleTestModule } from './module_test/module_test.module';
-import { CategoryModule } from './category/category.module';
 import { CourseModule } from './course/course.module';
 
 import { LessonModule } from './lesson/lesson.module';
@@ -16,7 +15,6 @@ import { RateModule } from './rate/rate.module';
 import { EnrolledCourseModule } from './enrolled_course/enrolled_course.module';
 import { LikedCourseModule } from './liked_course/liked_course.module';
 import { ModulesModule } from './modules/modules.module';
-import { Category } from './category/entities/category.entity';
 import { ViewedModule } from './viewed/viewed.module';
 
 
@@ -34,7 +32,7 @@ import { HighlightsModule } from './highlights/highlights.module';
 import { StatisticsModule } from './statistics/statistics.module';
 import { Statistic } from './statistics/entities/statistic.entity';
 
-
+console.log(__dirname);
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -42,7 +40,7 @@ import { Statistic } from './statistics/entities/statistic.entity';
       envFilePath: `.development.env`,
     }),
     ServeStaticModule.forRoot({
-      rootPath: resolve(__dirname, 'static'),
+      rootPath: resolve(__dirname, '..', 'static'),
     }),
 
     SequelizeModule.forRootAsync({
@@ -55,17 +53,18 @@ import { Statistic } from './statistics/entities/statistic.entity';
         username: config.get<string>('POSTGRES_USER'),
         password: config.get<string>('POSTGRES_PASSWORD'),
         database: config.get<string>('POSTGRES_DB'),
-        models: [Admin, Category, Student, Modules, Course, Lesson, Rate, EnrolledCourse, LikedCourse, Viewed, ModuleTests, Statistic, Highlight],
+        models: [Admin, Student, Modules, Course, Lesson, Rate, EnrolledCourse, LikedCourse, Viewed, ModuleTests, Statistic, Highlight],
+        createDatabaseIfNotExist: true,
         autoLoadModels: true,
         synchronize: true,
         logging: false,
+        alter: true
       }),
     }),
 
     AdminsModule,
     StudentsModule,
     ModuleTestModule,
-    CategoryModule,
     CourseModule,
 
     LessonModule,

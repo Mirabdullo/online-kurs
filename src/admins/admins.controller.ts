@@ -9,7 +9,7 @@ import {
   Res,
   Req,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { AdminsService } from './admins.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
@@ -58,7 +58,8 @@ export class AdminsController {
 
   @ApiOperation({ summary: 'Adminning shaxsiy malumotlari' })
   @ApiResponse({ status: 200, type: Admin })
-  @Get('all')
+  @ApiBearerAuth()
+  @Get()
   findOne(@Req() req: Request) {
     return this.adminsService.findOne(req);
   }

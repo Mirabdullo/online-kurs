@@ -41,12 +41,6 @@ export class CourseController {
     return this.courseService.findAll();
   }
 
-  @ApiOperation({ summary: 'Category id orqali curslar royxati' })
-  @ApiResponse({ status: 200, type: [Course] })
-  @Get("category/:id")
-  findByCategory(@Param('id') id: string) {
-    return this.courseService.findByCategory(id);
-  }
 
   @ApiOperation({ summary: 'Id orqali bitta kourse' })
   @ApiResponse({ status: 200, type: Course })

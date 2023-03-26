@@ -9,13 +9,6 @@ import {
 } from 'class-validator';
 
 export class CreateCourseDto {
-  @ApiProperty({
-    example: '173ef952-79bb-489d-9cfc-62db0d8114b4',
-    description: 'Qaysi categoriyaga tegishliligi',
-  })
-  @IsUUID()
-  category_id: string;
-
   @ApiProperty({ example: 'AAT buhgalteriya', description: 'Course nomi' })
   @IsNotEmpty()
   @IsString({ message: 'title satr bolishi kerak' })
