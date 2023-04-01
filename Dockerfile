@@ -25,5 +25,12 @@ WORKDIR /app
 # Copy the built application from the first stage to the second stage
 COPY --from=builder /app/dist ./dist
 
+# Install production Node.js dependencies
+COPY package*.json ./
+RUN npm install --only=production
+
+# Expose the port the application listens on
+EXPOSE 3000
+
 # Start the application
 CMD ["node", "dist/main"]
