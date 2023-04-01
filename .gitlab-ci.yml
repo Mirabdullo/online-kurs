@@ -7,7 +7,7 @@ pg_test:
   only:
     - main
   tags:
-    - 1-blue.shared.runners-manager.gitlab.com/default
+    - 2-blue.shared.runners-manager.gitlab.com/default
   script:
     - make check-conn
   stage: test
@@ -16,7 +16,7 @@ build_project:
   only:
     - main
   tags:
-    - 1-blue.shared.runners-manager.gitlab.com/default
+    - 2-blue.shared.runners-manager.gitlab.com/default
   stage: build
   script:
     - make build
@@ -28,7 +28,7 @@ deploy_project:
   only:
     - main
   tags:
-    - 1-blue.shared.runners-manager.gitlab.com/default
+    - 2-blue.shared.runners-manager.gitlab.com/default
   stage: deploy
   script:
     - apk update && apk add openssh
