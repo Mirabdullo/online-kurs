@@ -13,17 +13,15 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
-      - ${POSTGRES_LOCAL_PORT}:${POSTGRES_PORT}
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
   app:
     container_name: olp
-    image: olp
-    build: 
-      context: ./src
+    image: mirabdulloh/olp
     depends_on:
       - postgres
     restart: unless-stopped
     ports:
-      - ${API_LOCAL_PORT}:${PORT}
+      - ${PORT}:${API_LOCAL_PORT}
     environment:
       - PORT=${PORT}
       - API_LOCAL_PORT=${API_LOCAL_PORT}

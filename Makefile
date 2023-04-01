@@ -7,7 +7,13 @@ check-conn:
 	&& ./scripts/check-connection.sh re
 
 build:
-	docker build -t olp .
+	docker build -t ${REGISTRY}/${APP} .
+
+push:
+	docker push ${REGISTRY}/${APP}
+
+rm:
+	docker push ${REGISTRY}/${APP}
 
 compose-up:
 	docker compose up -d
