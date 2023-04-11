@@ -1,4 +1,3 @@
-import { isArray } from 'class-validator';
 import {
   BadRequestException,
   HttpException,
@@ -16,16 +15,20 @@ export class FilesService {
     try {
       if (
         file.mimetype === 'image/jpeg' ||
+        file.mimetype === 'image/jpg' ||
         file.mimetype === 'image/png' ||
         file.mimetype === 'image/svg+xml' ||
         file.mimetype === 'video/mp4'
       ) {
-        let fileName = uuid.v4() + extname(file.originalname);
-        const filePath = path.resolve(__dirname, '..','..', 'static');
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+        const fileName = file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname)
+        const filePath = path.resolve(__dirname, '..','..', 'videos');
         if (!fs.existsSync(filePath)) {
           fs.mkdirSync(filePath, { recursive: true });
         }
-        fs.writeFileSync(path.join(filePath, fileName), file.buffer);
+        const imageStream = fs.createWriteStream(`/${filePath}/${fileName}`);
+        imageStream.write(file.buffer);
+        imageStream.end();
         return fileName;
       } else {
         throw new BadRequestException(
@@ -35,7 +38,7 @@ export class FilesService {
     } catch (error) {
       console.log(error);
       throw new HttpException(
-        'Faylni yozishda xatolik',
+        error.message,
         HttpStatus.FAILED_DEPENDENCY,
       );
     }

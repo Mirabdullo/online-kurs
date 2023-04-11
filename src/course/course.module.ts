@@ -7,6 +7,7 @@ import { Course } from './entities/course.entity';
 import { FilesModule } from '../uploads/files.module';
 import { Statistic } from '../statistics/entities/statistic.entity';
 import { MulterModule } from '@nestjs/platform-express';
+import * as multer from 'multer';
 
 @Module({
   imports: [

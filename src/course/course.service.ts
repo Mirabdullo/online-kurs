@@ -20,21 +20,7 @@ export class CourseService {
   async create(createCourseDto: CreateCourseDto, files: any) {
     try {
       createCourseDto.price = Number(createCourseDto.price)
-        let upload_image: string = ''
-        let upload_logo: string = ''
-        if(files.image){
-          upload_image = await this.fileService.createFile(files.image[0])         
-        }
-  
-        if(files.logo){
-          upload_logo = await this.fileService.createFile(files.logo[0])
-        }
-
-        await this.courseRepository.create({
-          ...createCourseDto,
-          image: upload_image,
-          logo: upload_logo,
-        });
+        await this.courseRepository.create(createCourseDto);
         return {
           statusCode: 201,
           message: 'Created',

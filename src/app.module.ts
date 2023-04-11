@@ -40,8 +40,11 @@ console.log(__dirname);
       envFilePath: `.development.env`,
     }),
     ServeStaticModule.forRoot({
-      rootPath: resolve(__dirname, '..', 'static'),
+      rootPath: resolve(__dirname, '..', 'videos'),
     }),
+    // ServeStaticModule.forRoot({
+    //   rootPath: resolve(__dirname, '..', 'images'),
+    // }),
 
     SequelizeModule.forRootAsync({
       imports: [ConfigModule],

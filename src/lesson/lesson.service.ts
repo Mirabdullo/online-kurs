@@ -2,13 +2,13 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
-  InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { FilesService } from '../uploads/files.service';
 import { CreateLessonDto } from './dto/create-lesson.dto';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
 import { Lesson } from './entities/lesson.entity';
+import { createReadStream } from 'fs-extra';
 
 @Injectable()
 export class LessonService {
@@ -18,22 +18,28 @@ export class LessonService {
   ) {}
   async create(createLessonDto: CreateLessonDto, file: any) {
     try {
-      const fileName = await this.fileService.createFile(file);
-      await this.lessonRepository.create({
-        ...createLessonDto,
-        video: fileName,
-      });
+      await this.lessonRepository.create(createLessonDto);
       return {
         statusCode: 201,
         message: 'Created',
       };
     } catch (error) {
+      console.log(error);
       if(!error.status){
         throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
       }
       throw new HttpException(error.message, error.status);
     }
   }
+
+
+
+  async getVideoStream(filename: string) {
+    const path = `./videos/${filename}`;
+    const stream = createReadStream(path);
+    return stream;
+  }
+
 
 
   async findAll() {
