@@ -23,13 +23,6 @@ export class CreateModuleTestDto {
   @IsUUID()
   module_id: string;
 
-  @ApiProperty({
-    example: 'Dasturlash nima?',
-    description: 'Test savoli',
-  })
-  @IsNotEmpty()
-  @IsArray()
-  question: Array;
 
   @ApiProperty({ example: 'Dasturlash', description: ' Birinchi variant' })
   @IsOptional()
