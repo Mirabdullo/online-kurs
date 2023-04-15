@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsArray,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -27,8 +28,8 @@ export class CreateModuleTestDto {
     description: 'Test savoli',
   })
   @IsNotEmpty()
-  @IsString()
-  question: string;
+  @IsArray()
+  question: Array;
 
   @ApiProperty({ example: 'Dasturlash', description: ' Birinchi variant' })
   @IsOptional()
