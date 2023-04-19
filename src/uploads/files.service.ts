@@ -23,6 +23,7 @@ export class FilesService {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
         const fileName = file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname)
         const filePath = path.resolve(__dirname, '..','..', 'videos');
+        console.log(filePath);
         if (!fs.existsSync(filePath)) {
           fs.mkdirSync(filePath, { recursive: true });
         }
