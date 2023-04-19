@@ -1,9 +1,7 @@
 import {
-  BadRequestException,
   HttpException,
   HttpStatus,
   Injectable,
-  InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { FilesService } from '../uploads/files.service';
@@ -19,8 +17,6 @@ export class CourseService {
   ) {}
   async create(createCourseDto: CreateCourseDto, files: any) {
     try {
-      console.log("object");
-      console.log(files);
       createCourseDto.price = Number(createCourseDto.price)
 
         await this.courseRepository.create(createCourseDto);

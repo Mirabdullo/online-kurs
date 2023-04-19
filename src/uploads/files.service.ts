@@ -6,8 +6,7 @@ import {
 } from '@nestjs/common';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as uuid from 'uuid';
-import { extname } from 'path';
+
 
 @Injectable()
 export class FilesService {
@@ -27,13 +26,13 @@ export class FilesService {
         if (!fs.existsSync(filePath)) {
           fs.mkdirSync(filePath, { recursive: true });
         }
-        const imageStream = fs.createWriteStream(`/${filePath}/${fileName}`);
+        const imageStream = fs.createWriteStream(`${filePath}/${fileName}`);
         imageStream.write(file.buffer);
         imageStream.end();
         return fileName;
       } else {
         throw new BadRequestException(
-          'Xato fayl kiritildi! (.jpeg  .png .mp4 .svg ) fayllar kiritilishi mumkin',
+          'Xato fayl kiritildi! (.jpeg .jpg .png .mp4 .svg ) fayllar kiritilishi mumkin',
         );
       }
     } catch (error) {
