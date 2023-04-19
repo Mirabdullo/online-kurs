@@ -19,7 +19,10 @@ export class CourseService {
   ) {}
   async create(createCourseDto: CreateCourseDto, files: any) {
     try {
+      console.log("object");
+      console.log(files);
       createCourseDto.price = Number(createCourseDto.price)
+
         await this.courseRepository.create(createCourseDto);
         return {
           statusCode: 201,
