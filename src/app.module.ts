@@ -31,6 +31,7 @@ import { ModuleTests } from './module_test/entities/module_test.entity';
 import { HighlightsModule } from './highlights/highlights.module';
 import { StatisticsModule } from './statistics/statistics.module';
 import { Statistic } from './statistics/entities/statistic.entity';
+import { MinioClientModule } from './minio-client/minio-client.module';
 
 console.log(__dirname);
 @Module({
@@ -42,26 +43,24 @@ console.log(__dirname);
     ServeStaticModule.forRoot({
       rootPath: resolve(__dirname, '..', 'videos'),
     }),
-    // ServeStaticModule.forRoot({
-    //   rootPath: resolve(__dirname, '..', 'images'),
-    // }),
+
 
     SequelizeModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: async (config: ConfigService) => ({
-        dialect: 'postgres',
-        host: config.get<string>('POSTGRES_HOST'),
-        port: config.get<number>('POSTGRES_PORT'),
-        username: config.get<string>('POSTGRES_USER'),
-        password: config.get<string>('POSTGRES_PASSWORD'),
-        database: config.get<string>('POSTGRES_DB'),
-        models: [Admin, Student, Modules, Course, Lesson, Rate, EnrolledCourse, LikedCourse, Viewed, ModuleTests, Statistic, Highlight],
-        createDatabaseIfNotExist: true,
-        autoLoadModels: true,
-        synchronize: true,
-        logging: false,
-        alter: true
+      "imports": [ConfigModule],
+      "inject": [ConfigService],
+      "useFactory": async (config: ConfigService) => ({
+        "dialect": 'postgres',
+        "host": config.get<string>('POSTGRES_HOST'),
+        "port": config.get<number>('POSTGRES_PORT'),
+        "username": config.get<string>('POSTGRES_USER'),
+        "password": config.get<string>('POSTGRES_PASSWORD'),
+        "database": config.get<string>('POSTGRES_DB'),
+        "models": [Admin, Student, Modules, Course, Lesson, Rate, EnrolledCourse, LikedCourse, Viewed, ModuleTests, Statistic, Highlight],
+        "createDatabaseIfNotExist": true,
+        "autoLoadModels": true,
+        "synchronize": true,
+        "logging": false,
+        "alter": true
       }),
     }),
 
@@ -85,6 +84,8 @@ console.log(__dirname);
     HighlightsModule,
 
     StatisticsModule,
+
+    MinioClientModule,
 
   ],
   controllers: [],

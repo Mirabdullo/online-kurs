@@ -12,8 +12,9 @@ build:
 push:
 	docker push ${REGISTRY}/${APP}
 
-rm:
-	docker push ${REGISTRY}/${APP}
+rm:y
+    docker-compose down && \
+    docker rmi mohir-dev-app
 
 compose-up:
 	docker compose up -d

@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { ModuleTestService } from './module_test.service';
 import { CreateModuleTestDto } from './dto/create-module_test.dto';
@@ -22,7 +24,17 @@ export class ModuleTestController {
   @ApiResponse({ status: 201, type: ModuleTests })
   @Post()
   create(@Body() createModuleTestDto: CreateModuleTestDto) {
-    return this.moduleTestService.create(createModuleTestDto);
+    let found = false
+    createModuleTestDto.answers.forEach(element => {
+      if(element['isCorrect'] == true){
+        found = true
+      }
+    });
+    if(found){
+        return this.moduleTestService.create(createModuleTestDto);
+    }else {
+      throw new HttpException("To'gri javob kiritilmadi",HttpStatus.BAD_REQUEST)
+    }
   }
 
   @ApiOperation({ summary: 'Module idsi orqali modulega tegishli testlar royxati' })

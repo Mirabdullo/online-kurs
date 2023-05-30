@@ -19,6 +19,7 @@ import { Lesson } from './entities/lesson.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AdminGuard } from '../guards/admin.guard';
 import { Response } from 'express';
+import {BufferedFile} from "../minio-client/file.model";
 
 
 @ApiTags('Lesson')
@@ -32,11 +33,15 @@ export class LessonController {
   @ApiConsumes('multipart/form-data')
   @Post()
   @UseInterceptors(FileInterceptor('video'))
-  async uploadVideo(@Body() createLessonDto: CreateLessonDto, @UploadedFile() file: Express.Multer.File) {
+  async uploadVideo(@Body() createLessonDto: CreateLessonDto, @UploadedFile() file: BufferedFile) {
     console.log(file);
-    createLessonDto.video = file.filename
     return this.lessonService.create(createLessonDto, file);
   }
+  // async uploadVideo(@Body() createLessonDto: CreateLessonDto, @UploadedFile() file: Express.Multer.File) {
+  //   console.log(file);
+  //   createLessonDto.video = file.filename
+  //   return this.lessonService.create(createLessonDto, file);
+  // }
 
   // @UseGuards(AdminGuard)
   @Get(':filename')

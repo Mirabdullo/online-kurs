@@ -3,6 +3,7 @@ import {
   IsArray,
   IsNotEmpty,
   IsNumber,
+  IsObject,
   IsOptional,
   IsString,
   IsUUID,
@@ -23,40 +24,14 @@ export class CreateModuleTestDto {
   @IsUUID()
   module_id: string;
 
-
-  @ApiProperty({ example: 'Dasturlash', description: ' Birinchi variant' })
-  @IsOptional()
-  @IsString()
-  select_first: string;
-
   @ApiProperty({
-    example: 'Dasturlash',
-    description: 'Ikkinchi variant',
+    example:"What is it?", description:"Test savoli"
   })
-  @IsOptional()
-  @IsString()
-  select_two: string;
+  question:string;
 
-  @ApiProperty({
-    example: 'Dasturlash',
-    description: 'Uchinchi variant',
-  })
-  @IsOptional()
-  @IsString()
-  select_three: string;
+  @ApiProperty({ example: '[{title:"some", isCorrect:true}, ..., ...]', description: 'Variantlar' })
+  @IsArray()
+  answers: Array<object>;
 
-  @ApiProperty({
-    example: 'Dasturlash',
-    description: "To'rtinchi variant",
-  })
-  @IsOptional()
-  @IsString()
-  select_four: string;
 
-  @ApiProperty({
-    example: '1',
-    description: "Nechinchi variant to'g'riligi",
-  })
-  @IsNumber()
-  answer: number;
 }

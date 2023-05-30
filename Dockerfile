@@ -1,36 +1,24 @@
-# First stage: build the application
-FROM node:14 AS builder
+FROM node:alpine
 
-# Set the working directory inside the Docker image
-WORKDIR /app
+WORKDIR /src
 
-# Copy package.json and package-lock.json to the Docker image
-COPY package*.json ./
+COPY /*.json ./
 
-# Install the Node.js dependencies
-RUN npm install
-
-# Copy the rest of the application code to the Docker image
 COPY . .
 
-# Build the application
-RUN npm run build
+RUN npm i && npm run build
 
-# Second stage: run the application
-FROM node:14-alpine AS runner
+EXPOSE 3005
 
-# Set the working directory inside the Docker image
-WORKDIR /app
+CMD ["npm","run","start:dev"]
 
-# Copy the built application from the first stage to the second stage
-COPY --from=builder /app/dist ./dist
 
-# Install production Node.js dependencies
-COPY package*.json ./
-RUN npm install --only=production
 
-# Expose the port the application listens on
-EXPOSE 3000
 
-# Start the application
-CMD ["node", "dist/main"]
+
+
+
+
+
+
+
