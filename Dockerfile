@@ -1,24 +1,3 @@
-FROM node:alpine
+FROM minio/minio
 
-WORKDIR /src
-
-COPY /*.json ./
-
-COPY . .
-
-RUN npm i && npm run build
-
-EXPOSE 3005
-
-CMD ["npm","run","start:dev"]
-
-
-
-
-
-
-
-
-
-
-
+ENTRYPOINT [ "minio", "server", "--console-address", ":9001", "/data" ]

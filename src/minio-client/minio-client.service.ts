@@ -48,7 +48,7 @@ export class MinioClientService {
     this.client.setBucketPolicy(
         process.env.MINIO_BUCKET_NAME,
         JSON.stringify(policy),
-        function (err) {
+        function (err:any) {
           if (err) throw err;
 
           console.log('Bucket policy set');
@@ -68,29 +68,29 @@ export class MinioClientService {
     return this.minio.client
   }
 
-  public async upload(file: BufferedFile, bucketName: string = this.bucketName){
-    if(!file.mimetype.includes('mp4')){
-      throw new HttpException('File type not supported', HttpStatus.BAD_REQUEST)
-    }
 
-    const timestamp = Date.now().toString()
-    const hashedFileName = crypto.createHash('md5').update(timestamp).digest('hex')
-    const extension = file.originalname.substring(file.originalname.lastIndexOf('.'), file.originalname.length)
-    const metaData= {
-      'Content-Type': file.mimetype
-    }
-    const fileName = hashedFileName + extension
 
-    this.client.putObject(
-        bucketName, fileName, file.buffer, metaData, function (err, res){
-          if(err){
-            console.log(err)
-            throw new HttpException('Error uploading file', HttpStatus.BAD_REQUEST)
-          }
-        }
-    );
-    return {
-      url: `${process.env.MINIO_ENDPOINT}:${process.env.MINIO_PORT}/${process.env.MINIO_BUCKET_NAME}/${fileName}`
+  public async upload(file: BufferedFile, bucketName: string = this.bucketName) {
+    if (!file.mimetype.includes('mp4')) {
+      throw new HttpException('File type not supported', HttpStatus.BAD_REQUEST);
+    }
+  
+    const timestamp = Date.now().toString();
+    const hashedFileName = crypto.createHash('md5').update(timestamp).digest('hex');
+    const extension = file.originalname.substring(file.originalname.lastIndexOf('.'), file.originalname.length);
+    const metaData = {
+      'Content-Type': file.mimetype,
+    };
+    const fileName = hashedFileName + extension;
+  
+    try {
+      await this.client.putObject(bucketName, fileName, file.buffer, metaData);
+      return {
+        url: `${process.env.MINIO_ENDPOINT}:${process.env.MINIO_PORT}/${process.env.MINIO_BUCKET_NAME}/${fileName}`,
+      };
+    } catch (error) {
+      console.log(error);
+      throw new HttpException('Error uploading file', HttpStatus.BAD_REQUEST);
     }
   }
 
